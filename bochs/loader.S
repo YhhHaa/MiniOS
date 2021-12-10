@@ -1,4 +1,4 @@
-%include "boot.inc"
+%include "include/boot.inc"
 section loader vstart=LOADER_BASE_ADDR
 
 ; -----------gdt and descriptor-----------
@@ -142,9 +142,9 @@ p_mode_start:
 
 	mov byte [gs:160], 'P'
 	
-	mov eax, 200
+	mov eax, KERNEL_START_SECTOR
 	mov ebx, KERNEL_BIN_BASE_ADDR
-	mov ecx, KERNEL_START_SECTOR
+	mov ecx, 200
 	call rd_disk_m_32
 
 	call setup_page
@@ -180,14 +180,19 @@ p_mode_start:
 
 ; --------------- load kernel ------------------------------------------
 rd_disk_m_32:
-	push eax
+	; Backup
+	mov esi, eax	; Backup eax: LBA addr of start sector.
+	mov di, cx		; Backup cx: number of sectors to be written.
+
 	; 1. setcor count
 	mov dx, 0x1f2
-	out dx, cl
+	mov al, cl
+	out dx, al
+	mov eax, esi
 
 	; 2. addr
 	mov dx, 0x1f3
-	out edx, al
+	out dx, al
 
 	mov dx, 0x1f4
    	shr eax, 8
@@ -213,18 +218,19 @@ rd_disk_m_32:
 		nop
 		in al, dx
 		and al, 1000_1000b
-		cmp al, 1000_1000b
+		cmp al, 0000_1000b
 		jnz .not_ready
 	
 	; 5. read from disk
-	pop eax
+	mov ax, di ; Number of sectors.
 	mov dx, 256
-	mul dx
+	mul dx		 ; Times to read->ax.
 	mov cx, ax
 	mov dx, 0x1f0
 	.go_on_read:
-		in [ebx], dx 
-		add ebx, 2
+		in ax, dx
+		mov [ebx], ax
+		add bx, 2
 		loop .go_on_read
 		ret
 

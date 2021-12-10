@@ -1,7 +1,7 @@
 ;Main boot record;
 
 ;Include the configuration.
-%include "boot.inc"
+%include "include/boot.inc"
 
 SECTION MBR vstart=0x7c00
 	mov ax, cs

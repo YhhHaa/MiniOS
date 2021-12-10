@@ -30,7 +30,7 @@
 00000000000i[     ]   SB16 support: no
 00000000000i[     ]   USB support: no
 00000000000i[     ]   VGA extension support: vbe
-00000000000i[MEM0 ] allocated memory at 0x7f61294fc010. after alignment, vector=0x7f61294fd000
+00000000000i[MEM0 ] allocated memory at 0x7f65cc677010. after alignment, vector=0x7f65cc678000
 00000000000i[MEM0 ] 32.00MB
 00000000000i[MEM0 ] mem block size = 0x00100000, blocks=32
 00000000000i[MEM0 ] rom at 0xfffe0000/131072 ('/home/miele/Desktop/MiniOS/bochs/share/bochs/BIOS-bochs-latest')
@@ -40,7 +40,7 @@
 00000000000i[DEV  ] PIIX3 PCI-to-ISA bridge present at device 1, function 0
 00000000000i[     ] init_dev of 'cmos' plugin device by virtual method
 00000000000i[CMOS ] Using local time for initial clock
-00000000000i[CMOS ] Setting initial clock to: Mon Dec  6 23:27:31 2021 (time0=1638862051)
+00000000000i[CMOS ] Setting initial clock to: Fri Dec 10 16:04:16 2021 (time0=1639123456)
 00000000000i[     ] init_dev of 'dma' plugin device by virtual method
 00000000000i[DMA  ] channel 4 used by cascade
 00000000000i[     ] init_dev of 'pic' plugin device by virtual method
@@ -137,7 +137,7 @@
 00000000000i[     ] reset of 'unmapped' plugin device by virtual method
 00000000000i[     ] reset of 'biosdev' plugin device by virtual method
 00000000000i[     ] reset of 'speaker' plugin device by virtual method
-00000000000e[SPEAK] Failed to open /dev/console: Permission denied
+00000000000e[SPEAK] Failed to open /dev/console: 权限不够
 00000000000e[SPEAK] Deactivating beep on console
 00000000000i[     ] reset of 'extfpuirq' plugin device by virtual method
 00000000000i[     ] reset of 'parallel' plugin device by virtual method
@@ -191,28 +191,35 @@
 00001871692i[BIOS ] ata0-0: PCHS=121/16/63 translation=none LCHS=121/16/63
 00005748898i[BIOS ] IDE time out
 00017824346i[BIOS ] Booting from 0000:7c00
-00017833583i[MEM0 ] allocate_block: block=0x1 used 0x3 of 0x20
-00102832376i[     ] Ctrl-C detected in signal handler.
-00102832377i[XGUI ] Mouse capture off
-00102832377i[XGUI ] Mouse capture off
-00102832377i[     ] dbg: Quit
-00102832377i[CPU0 ] CPU is in protected mode (active)
-00102832377i[CPU0 ] CS.mode = 32 bit
-00102832377i[CPU0 ] SS.mode = 32 bit
-00102832377i[CPU0 ] EFER   = 0x00000000
-00102832377i[CPU0 ] | EAX=e0000011  EBX=00000900  ECX=00000000  EDX=00100007
-00102832377i[CPU0 ] | ESP=c0000900  EBP=00000000  ESI=000003ff  EDI=00000b82
-00102832377i[CPU0 ] | IOPL=0 id vip vif ac vm rf nt of df if tf SF zf af PF cf
-00102832377i[CPU0 ] | SEG sltr(index|ti|rpl)     base    limit G D
-00102832377i[CPU0 ] |  CS:0008( 0001| 0|  0) 00000000 ffffffff 1 1
-00102832377i[CPU0 ] |  DS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-00102832377i[CPU0 ] |  SS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-00102832377i[CPU0 ] |  ES:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-00102832377i[CPU0 ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00102832377i[CPU0 ] |  GS:0018( 0003| 0|  0) 000b8000 00007fff 1 1
-00102832377i[CPU0 ] | EIP=00000d31 (00000d31)
-00102832377i[CPU0 ] | CR0=0xe0000011 CR2=0x00000000
-00102832377i[CPU0 ] | CR3=0x00100000 CR4=0x00000000
-00102832377i[CMOS ] Last time is 1638862076 (Mon Dec  6 23:27:56 2021)
-00102832377i[XGUI ] Exit
-00102832377i[CTRL ] quit_sim called with exit code 0
+00018038420i[MEM0 ] allocate_block: block=0x1 used 0x3 of 0x20
+00295416000i[     ] Ctrl-C detected in signal handler.
+00295416000i[XGUI ] Mouse capture off
+00295416000i[XGUI ] Mouse capture off
+00295416000i[XGUI ] Mouse capture off
+00295416000i[XGUI ] Mouse capture off
+00295416000i[XGUI ] Mouse capture off
+00295416000i[XGUI ] Mouse capture off
+00295416000i[XGUI ] Mouse capture off
+00568944570i[     ] Ctrl-C detected in signal handler.
+00568944571i[XGUI ] Mouse capture off
+00568944571i[     ] dbg: Quit
+00568944571i[CPU0 ] CPU is in protected mode (active)
+00568944571i[CPU0 ] CS.mode = 32 bit
+00568944571i[CPU0 ] SS.mode = 32 bit
+00568944571i[CPU0 ] EFER   = 0x00000000
+00568944571i[CPU0 ] | EAX=e0000011  EBX=00000900  ECX=00000000  EDX=00100007
+00568944571i[CPU0 ] | ESP=c0000900  EBP=00000000  ESI=000003ff  EDI=000000c8
+00568944571i[CPU0 ] | IOPL=0 id vip vif ac vm rf nt of df if tf SF zf af PF cf
+00568944571i[CPU0 ] | SEG sltr(index|ti|rpl)     base    limit G D
+00568944571i[CPU0 ] |  CS:0008( 0001| 0|  0) 00000000 ffffffff 1 1
+00568944571i[CPU0 ] |  DS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+00568944571i[CPU0 ] |  SS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+00568944571i[CPU0 ] |  ES:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+00568944571i[CPU0 ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
+00568944571i[CPU0 ] |  GS:0018( 0003| 0|  0) 000b8000 00007fff 1 1
+00568944571i[CPU0 ] | EIP=00000d45 (00000d45)
+00568944571i[CPU0 ] | CR0=0xe0000011 CR2=0x00000000
+00568944571i[CPU0 ] | CR3=0x00100000 CR4=0x00000000
+00568944571i[CMOS ] Last time is 1639123598 (Fri Dec 10 16:06:38 2021)
+00568944571i[XGUI ] Exit
+00568944571i[CTRL ] quit_sim called with exit code 0
