@@ -1,36 +1,30 @@
 %include "boot.inc"
 section loader vstart=LOADER_BASE_ADDR
-LOADER_STACK_TOP equ LOADER_BASE_ADDR
-
 
 ; -----------gdt and descriptor-----------
-GDT_BASE:			dd		0x00000000
-					dd		0x00000000
+GDT_BASE:	dd		0x00000000
+			dd		0x00000000
 
-CODE_BASE:			dd		0x0000ffff
-					dd		DESC_CODE_HIGH4
+CODE_BASE:	dd		0x0000ffff
+			dd		DESC_CODE_HIGH4
 
-DATA_STACK_DESC:	dd		0x0000ffff
+DATA_STACK_DESC:    dd		0x0000ffff
 					dd		DESC_DATA_HIGH4
 
-VIDEO_DESC:			dd		0x80000007			; limit=(0xbffff-0xb8000)/4k=0x7
-					dd		DESC_VIDEO_HIGH4	; Current dpi is 0.
-
-GDT_SIZE			equ		$ - GDT_BASE
-GDT_LIMIT			equ		GDT_SIZE - 1
+VIDEO_DESC:	 dd		0x80000007			; limit=(0xbffff-0xb8000)/4k=0x7
+			 dd		DESC_VIDEO_HIGH4	; Current dpi is 0.
+									 
+GDT_SIZE	equ		$ - GDT_BASE
+GDT_LIMIT	equ		GDT_SIZE - 1
 
 times	60	dq	0	; 60 blanks.
-
-SELECTOR_CODE 		equ		(0x0001<<3) + TI_GDT + RPL0
-SELECTOR_DATA		equ		(0x0002<<3) + TI_GDT + RPL0
-SELECTOR_VIDEO		equ		(0x0003<<3) + TI_GDT + RPL0
 
 ; detect memory. (ip->64*8+0x900=0x200+0x900=0xb00)
 total_mem_bytes dd 0
 
 ; -----------------gdt point---------------
 gdt_ptr     dw      GDT_LIMIT
-            dd      GDT_BASE
+            		dd      GDT_BASE
 
 
 ; total_mem_bytes4+gdt_ptr6+ards_buff244+ards_nr2, total: 256B.
@@ -72,7 +66,7 @@ loader_start:
 
 	; -----------------int 0x15 ax=0xe801--------------
 .e820_failed_so_try_e801:
-	mov ax, 0xe801
+    mov ax, 0xe801
 	int 0x15
 	jc .e801_failed_so_try88
 
@@ -147,5 +141,140 @@ p_mode_start:
 	mov gs, ax
 
 	mov byte [gs:160], 'P'
+	
+	mov eax, 200
+	mov ebx, KERNEL_BIN_BASE_ADDR
+	mov ecx, KERNEL_START_SECTOR
+	call rd_disk_m_32
+
+	call setup_page
+	sgdt [gdt_ptr]	; Store the past gdt address
+
+
+	; video segment address + 3G
+	mov ebx, [gdt_ptr + 2]
+	or dword [ebx + 0x18 + 4], 0xc0000000
+
+	; move gdt to 3G+
+	add dword [gdt_ptr + 2], 0xc0000000
+
+	; change stack address
+	add esp, 0xc0000000
+
+	; cr3
+	mov eax, PAGE_DIR_TABLE_POS
+	mov cr3, eax
+
+	; cr0
+	mov eax, cr0
+	or eax, 0x8000_0000
+	mov cr0, eax
+
+	; restore new gdt
+	lgdt [gdt_ptr]
+
+	; test
+	mov byte [gs:160], 'V'
 
 	jmp $
+
+; --------------- load kernel ------------------------------------------
+rd_disk_m_32:
+	push eax
+	; 1. setcor count
+	mov dx, 0x1f2
+	out dx, cl
+
+	; 2. addr
+	mov dx, 0x1f3
+	out edx, al
+
+	mov dx, 0x1f4
+   	shr eax, 8
+	out dx, al
+
+	mov dx, 0x1f5
+	shr eax, 8
+	out dx, al
+
+	mov dx, 0x1f6
+	shr eax, 8
+	and al, 0000_1111b
+	or al, 1110_0000b
+	out dx, al
+
+	; 3. read command
+	mov dx, 0x1f7
+	mov al, 0x20
+	out dx, al
+
+	; 4. check disk status
+	.not_ready:
+		nop
+		in al, dx
+		and al, 1000_1000b
+		cmp al, 1000_1000b
+		jnz .not_ready
+	
+	; 5. read from disk
+	pop eax
+	mov dx, 256
+	mul dx
+	mov cx, ax
+	mov dx, 0x1f0
+	.go_on_read:
+		in [ebx], dx 
+		add ebx, 2
+		loop .go_on_read
+		ret
+
+
+; --------------- Create Page Directory Table and Page Table ------------
+setup_page:
+; 1.  Clear the data from 0x10_0000 to 0x10_1000.
+	mov ecx, 4096  ; 4K times to loop.
+	mov esi, 0
+.clear_page_dir:
+	mov byte [PAGE_DIR_TABLE_POS + esi], 0
+	inc esi
+	loop .clear_page_dir
+
+; 2. Create Page Directory Entry.
+.create_pde:
+	mov eax, PAGE_DIR_TABLE_POS	; 0x10_0000.
+	add eax, 0x1000
+	mov ebx, eax		; The base address of the first Page Table: 0x10_1000(Base+4KB).
+	
+	; Entries higher than the 768th entry were occupied by kernel space(0xc000_0000-0xffff_ffff).
+	or eax, PG_US_U | PG_RW_W | PG_P	; U,W,P attributes: 0x7 or addr: 0x10_1000_=0x10_1007=eax.
+	mov [PAGE_DIR_TABLE_POS + 0x000], eax  ; Write attr(0x10_1007) to [0x10_0000](the 0th entry)
+	mov [PAGE_DIR_TABLE_POS + 0xc00], eax  ; Write attr(0x10_1007) to [0x10_0c00](the 768th entry)
+	
+	; Set the last pde(the 1023th entry) to eax=0x10_0007 which pointed to itself.
+	sub eax, 0x1000
+	mov [PAGE_DIR_TABLE_POS + 4092], eax
+
+; 3. Create PTE.
+	mov ecx, 256	; 1M of low memory / 4k per page = 256
+	mov esi, 0
+	mov edx, PG_US_U | PG_RW_W | PG_P	; Attr: 0x7
+.create_pte:
+	mov [ebx+esi*4], edx	; [(0x10_1000)+4k*n]=0x7+4096*n.
+	add edx, 4096
+	inc esi
+	loop .create_pte
+
+; 4. Create the PDE of other Page Tables from 768~1022(1023 pointed to itself).
+	mov eax, PAGE_DIR_TABLE_POS
+	add eax, 0x2000
+	or eax, PG_US_U | PG_RW_W | PG_P
+	mov ebx, PAGE_DIR_TABLE_POS
+	mov ecx, 254
+	mov esi, 769
+.create_kernel_pde:
+	mov [ebx+esi*4], eax
+	inc esi
+	add eax, 0x1000		; eax=0x10_2000 + 0x1000*n
+	loop .create_kernel_pde
+	ret
+

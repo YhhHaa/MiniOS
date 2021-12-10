@@ -1,6 +1,10 @@
 ; -----------loader------------------
 LOADER_BASE_ADDR equ 0x900
 LOADER_START_SECTOR equ 0x2
+PAGE_DIR_TABLE_POS equ 0x10_0000
+LOADER_STACK_TOP equ LOADER_BASE_ADDR
+KERNEL_START_SECTOR equ 0x9
+KERNEL_BIN_BASE_ADDR equ 0x7_0000
 
 ; -----------gdt attr----------------
 DESC_G_4K equ 1_000_000_000_000_000_000_000_00b
@@ -43,3 +47,15 @@ RPL2 equ 10b
 RPL3 equ 11b
 TI_GDT equ 000b
 TI_LDT equ 100b
+
+SELECTOR_CODE   	    equ        (0x0001<<3) + TI_GDT + RPL0
+SELECTOR_DATA	        equ        (0x0002<<3) + TI_GDT + RPL0
+SELECTOR_VIDEO          equ        (0x0003<<3) + TI_GDT + RPL0
+
+
+; ------------Page Table Attribute---------------
+PG_P 	equ 1b
+PG_RW_R equ 00b
+PG_RW_W equ 10b
+PG_US_S equ 000b
+PG_US_U equ 100b
