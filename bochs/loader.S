@@ -176,7 +176,10 @@ p_mode_start:
 	; test
 	mov byte [gs:160], 'V'
 
-	jmp $
+	; ----------- enter kernel ------------------
+	call kernel_init
+	mov esp, 0xc009_f000 ; Just for convenience.
+	jmp KERNEL_ENTRY_POINT
 
 ; --------------- load kernel ------------------------------------------
 rd_disk_m_32:
@@ -230,7 +233,7 @@ rd_disk_m_32:
 	.go_on_read:
 		in ax, dx
 		mov [ebx], ax
-		add bx, 2
+		add ebx, 2
 		loop .go_on_read
 		ret
 
@@ -284,3 +287,54 @@ setup_page:
 	loop .create_kernel_pde
 	ret
 
+; -------------- copy segment from kernel.bin ------------
+kernel_init:
+	xor eax, eax	; Just init.
+	xor ebx, ebx	; Address of program header table.
+	xor ecx, ecx	; Number of program headers.
+	xor edx, edx	; Size of program header.
+
+	mov ebx, [KERNEL_BIN_BASE_ADDR + 28] ; This is where the offset of program header at.
+	add ebx, KERNEL_BIN_BASE_ADDR		; Get physical address of program header.
+
+	mov cx, [KERNEL_BIN_BASE_ADDR + 44] ; This is the number of program header.
+
+	mov dx, [KERNEL_BIN_BASE_ADDR + 42]	; This is the size of program header.
+
+	.each_segment:
+		cmp byte [ebx + 0], PT_NULL ; If type of program header table was PT_NUll, it was not used.
+		je .PTNULL
+
+		push dword [ebx + 16]	; This is p_filesz of program header.
+
+		mov eax, [ebx + 4] ; This is p_offset of program header.
+		add eax, KERNEL_BIN_BASE_ADDR ; Get physical address of program header.
+		push eax
+
+		push dword [ebx + 8] ; This is p_vaddr of program header.
+
+		call mem_cpy
+		add esp, 12
+	
+	.PTNULL:
+		add ebx, edx	; Jump to next program header.
+		loop .each_segment
+		ret
+
+mem_cpy:
+	cld	; Set address direction.
+	; Backup ebp.
+	push ebp
+	mov ebp, esp
+
+	; Backup the loop times of outer function.
+	push ecx
+
+	mov edi, [ebp + 8] ; dst
+	mov esi, [ebp + 12] ; src
+	mov ecx, [ebp + 16] ; size
+	rep movsb
+
+	pop ecx
+	pop ebp
+	ret
