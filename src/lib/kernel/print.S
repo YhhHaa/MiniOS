@@ -9,6 +9,32 @@
 
 [bits 32]
 section .text
+; ---------- put_str ---------------------------------------------
+; Function: print strings with put_char function.
+; -----------------------------------------------------------------
+global put_str
+put_str:
+    push ebx
+    push ecx
+    xor ecx, ecx
+    mov ebx, [esp + 12]
+
+    .goon:
+        mov cl, [ebx]
+        cmp cl, 0
+        jz .str_over
+
+        push ecx
+        call put_char
+        add esp, 4
+        inc ebx
+        jmp .goon
+
+    .str_over:
+        pop ecx
+        pop ebx
+        ret
+
 ; ---------- put_char ---------------------------------------------
 ; Function: Put one character in stack into at where text cursor.
 ; -----------------------------------------------------------------
