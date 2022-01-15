@@ -1,14 +1,74 @@
-;1.Backup registers.
-;2.Get position of text cursor.
-;3.Get the strings.
-;4.Judge the type of character.
-;5.Need to roll screen.
-;6.Recover registers.
 %include "include/boot.inc"
 
 
 [bits 32]
+section .data
+put_int_buffer dq 0
+
 section .text
+
+global put_int
+put_int:
+    pushad
+    mov ebp, esp
+    mov eax, [ebp + 4 * 9]
+    mov edx, eax
+    mov edi, 7  ; offset in put_int_buffer.
+    mov ecx, 8  ; number of 32bits in hexadecimal notation.
+    mov ebx, put_int_buffer
+
+    .16based_4bits:
+        and edx, 0x0000_000f ; get low 4 bits.
+        cmp edx, 9 ; A-F jump to .is_A2F.
+        jg .is_A2F
+
+        add edx, '0' ; get ascii.
+        jmp .store
+    
+    .is_A2F:
+        sub edx, 10
+        add edx, 'A'
+    
+    .store:
+        mov [ebx + edi], dl
+        dec edi
+        shr eax, 4
+        mov edx, eax
+        loop .16based_4bits
+    
+    .ready_to_print:
+        ; Delete zero at high bits.
+        inc edi ; current edi is (-1)0xffff_ffff, add 1 to edi to make it be 0.
+    .skip_prefix_0:
+        cmp edi, 8
+        je .full0
+    
+    .go_on_skip:
+        mov cl, [put_int_buffer + edi]
+        inc edi
+        cmp cl, '0'
+        je .skip_prefix_0
+
+        dec edi ; until it is not zero.
+        jmp .put_each_num
+    
+    .full0:
+        mov cl, '0'
+    
+    .put_each_num:
+        push ecx ; print character.
+        call put_char
+
+        add esp, 4 ; clear parameter in stack.
+        inc edi ; update data in ecx.
+        mov cl, [put_int_buffer + edi]
+
+        cmp edi, 8 ; until print all characters.
+        jl .put_each_num
+
+        popad ; exit.
+        ret
+
 ; ---------- put_str ---------------------------------------------
 ; Function: print strings with put_char function.
 ; -----------------------------------------------------------------
