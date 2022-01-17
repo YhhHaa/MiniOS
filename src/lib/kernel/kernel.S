@@ -5,33 +5,50 @@
 
 ; 申明外部汇编函数
 extern put_str;
+extern idt_table;
 
 section .data
-    intr_str db "interrupt occur!", 0xa, 0
+    global intr_entry_table
+    intr_entry_table:
+        %macro VECTOR 2
 
-global intr_entry_table
-intr_entry_table:
-    %macro VECTOR 2
+        section .text
+            intr%1entry:
+                %2 ; 压入错误码
 
-    section .text
-        intr%1entry:
-            %2
-            push intr_str
-            call put_str
-            add esp, 4 ; 跳过intr_str参数
+                ; 保存上下文环境
+                push ds
+                push es
+                push fs
+                push gs
+                pushad
 
-            ; 发送中断结束命令
-            mov al, 0x20 ; 写入状态控制字OCW2
-            out 0xa0, al ; 向从片发送
-            out 0x20, al ; 向主片发送
+                ; 发送中断结束命令
+                mov al, 0x20 ; 写入状态控制字OCW2
+                out 0xa0, al ; 向从片发送
+                out 0x20, al ; 向主片发送
 
-            add esp, 4 ; 跳过error_code
-            iret
-    
-    section .data
-        dd intr%1entry
+                push %1 ; 压入中断向量号
+                call [idt_table + %1 * 4] ; 调用C数组中的中断处理函数
+                jmp intr_exit
+        
+        section .data
+            dd intr%1entry
 
-    %endmacro
+        %endmacro
+
+section .text
+global intr_exit
+intr_exit:
+    ; 恢复上下文环境
+    add esp, 4 ; 跳过中断向量号
+    popad
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    add esp, 4 ; 跳过error_code
+    iretd
 
 VECTOR 0x00, ZERO
 VECTOR 0x01, ZERO
