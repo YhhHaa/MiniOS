@@ -1,10 +1,10 @@
 #include "../../include/kernel/print.h"
+#include "../../include/kernel/init.h"
 
 
 void main(void) {
     put_str("I am in kernel now!\n");
-    put_int(0);
-    put_char('\n');
-    put_int(100);
+    init_all();
+    asm volatile("sti");
     while(1);
 }

@@ -16,7 +16,7 @@
 static inline void outb(uint16_t port, uint8_t data) {
     // %b0表示取1个字节, %w1表示取2个字节
     // Nd表示指定端口0-255且用dx寄存器存储
-    asm volatile ("outb %b0 %w1": : "a" (data), "Nd" (port));
+    asm volatile ("outb %b0, %w1": : "a" (data), "Nd" (port));
 }
 
 
