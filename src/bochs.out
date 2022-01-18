@@ -30,7 +30,7 @@
 00000000000i[     ]   SB16 support: no
 00000000000i[     ]   USB support: no
 00000000000i[     ]   VGA extension support: vbe
-00000000000i[MEM0 ] allocated memory at 0x7fb114d42010. after alignment, vector=0x7fb114d43000
+00000000000i[MEM0 ] allocated memory at 0x7fe786c82010. after alignment, vector=0x7fe786c83000
 00000000000i[MEM0 ] 32.00MB
 00000000000i[MEM0 ] mem block size = 0x00100000, blocks=32
 00000000000i[MEM0 ] rom at 0xfffe0000/131072 ('/home/miele/Desktop/MiniOS/bochs/share/bochs/BIOS-bochs-latest')
@@ -40,7 +40,7 @@
 00000000000i[DEV  ] PIIX3 PCI-to-ISA bridge present at device 1, function 0
 00000000000i[     ] init_dev of 'cmos' plugin device by virtual method
 00000000000i[CMOS ] Using local time for initial clock
-00000000000i[CMOS ] Setting initial clock to: Mon Jan 17 16:23:24 2022 (time0=1642407804)
+00000000000i[CMOS ] Setting initial clock to: Tue Jan 18 17:07:44 2022 (time0=1642496864)
 00000000000i[     ] init_dev of 'dma' plugin device by virtual method
 00000000000i[DMA  ] channel 4 used by cascade
 00000000000i[     ] init_dev of 'pic' plugin device by virtual method
@@ -146,9 +146,7 @@
 00000000000i[XGUI ] Mouse capture off
 00000000000i[     ] set SIGINT handler to bx_debug_ctrlc_handler
 00000000000i[XGUI ] Mouse capture off
-00000000000i[XGUI ] Mouse capture off
-00000000000i[MEM0 ] allocate_block: block=0x0 used 0x1 of 0x20
-00000000000i[XGUI ] Mouse capture off
+00000000025i[MEM0 ] allocate_block: block=0x0 used 0x1 of 0x20
 00000004661i[BIOS ] $Revision: 11545 $ $Date: 2012-11-11 09:11:17 +0100 (So, 11. Nov 2012) $
 00000318067i[KBD  ] reset-disable command received
 00000320801i[BIOS ] Starting rombios32
@@ -194,44 +192,106 @@
 00005748901i[BIOS ] IDE time out
 00017824339i[BIOS ] Booting from 0000:7c00
 00018038413i[MEM0 ] allocate_block: block=0x1 used 0x3 of 0x20
-00018240476i[CPU0 ] [18240476] Caught time breakpoint
-00018240476i[XGUI ] Mouse capture off
-00018240476i[XGUI ] Mouse capture off
-00018240476i[XGUI ] Mouse capture off
-00018240477i[XGUI ] Mouse capture off
-00018240477i[XGUI ] Mouse capture off
-00018240477i[XGUI ] Mouse capture off
-00018240478i[XGUI ] Mouse capture off
-00018240478i[XGUI ] Mouse capture off
-00018240479i[XGUI ] Mouse capture off
-00018240479i[XGUI ] Mouse capture off
-00018240480i[XGUI ] Mouse capture off
-00018240480i[XGUI ] Mouse capture off
-00018240481i[XGUI ] Mouse capture off
-00018240481i[XGUI ] Mouse capture off
-00018240481i[XGUI ] Mouse capture off
-00018240481i[XGUI ] Mouse capture off
-00018240482i[XGUI ] Mouse capture off
-00018240482i[XGUI ] Mouse capture off
-00018240482i[XGUI ] Mouse capture off
-00018240482i[     ] dbg: Quit
-00018240482i[CPU0 ] CPU is in protected mode (active)
-00018240482i[CPU0 ] CS.mode = 32 bit
-00018240482i[CPU0 ] SS.mode = 32 bit
-00018240482i[CPU0 ] EFER   = 0x00000000
-00018240482i[CPU0 ] | EAX=40a00107  EBX=00070094  ECX=00000000  EDX=00000000
-00018240482i[CPU0 ] | ESP=c009efa0  EBP=c009effc  ESI=00070000  EDI=00000000
-00018240482i[CPU0 ] | IOPL=0 id vip vif ac vm rf nt of df if tf sf ZF af PF cf
-00018240482i[CPU0 ] | SEG sltr(index|ti|rpl)     base    limit G D
-00018240482i[CPU0 ] |  CS:0008( 0001| 0|  0) 00000000 ffffffff 1 1
-00018240482i[CPU0 ] |  DS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-00018240482i[CPU0 ] |  SS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-00018240482i[CPU0 ] |  ES:0010( 0002| 0|  0) 00000000 ffffffff 1 1
-00018240482i[CPU0 ] |  FS:0000( 0005| 0|  0) 00000000 0000ffff 0 0
-00018240482i[CPU0 ] |  GS:0018( 0003| 0|  0) c00b8000 00007fff 1 1
-00018240482i[CPU0 ] | EIP=c0001d23 (c0001d23)
-00018240482i[CPU0 ] | CR0=0xe0000011 CR2=0x00000000
-00018240482i[CPU0 ] | CR3=0x00100000 CR4=0x00000000
-00018240482i[CMOS ] Last time is 1642407808 (Mon Jan 17 16:23:28 2022)
-00018240482i[XGUI ] Exit
-00018240482i[CTRL ] quit_sim called with exit code 0
+00018271130e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00018462353e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00018730994e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00018922217e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00019673582e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00019864805e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00020133446e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00020324669e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00020593310e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00020784533e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00021535898e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00021727121e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00021995762e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00022186985e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00022455626e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00022646849e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00023398214e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00023589437e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00023858078e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00024049301e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00024317942e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00024586583e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00025260530e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00025451753e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00025720394e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00025911617e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00026662982e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00026854205e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00027122846e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00027314069e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00027582710e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00027773933e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00028525298e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00028716521e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00028985162e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00029176385e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00029445026e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00029636249e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00030387614e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00030578837e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00030847478e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00031038701e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00031307342e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00031498565e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00032249930e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00032441153e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00032709794e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00032901017e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00033169658e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00033360881e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00034112246e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00034303469e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00034572110e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00034763333e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00035031974e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00035223197e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00035974562e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00036165785e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00036434426e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00036625649e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00036894290e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00037085513e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00037836878e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00038028101e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00038296742e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00038487965e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00038756606e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00038947829e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00039699194e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00039890417e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00040159058e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00040350281e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00040618922e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00040810145e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00041561510e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00041752733e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00042021374e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00042212597e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00042481238e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00042672461e[CPU0 ] interrupt(): vector must be within IDT table limits, IDT.limit = 0x107
+00042885473i[     ] Ctrl-C detected in signal handler.
+00042885474i[XGUI ] Mouse capture off
+00042885474i[     ] dbg: Quit
+00042885474i[CPU0 ] CPU is in protected mode (active)
+00042885474i[CPU0 ] CS.mode = 32 bit
+00042885474i[CPU0 ] SS.mode = 32 bit
+00042885474i[CPU0 ] EFER   = 0x00000000
+00042885474i[CPU0 ] | EAX=00000018  EBX=000707d0  ECX=000002c8  EDX=00000010
+00042885474i[CPU0 ] | ESP=c009ef58  EBP=c009ef94  ESI=c00b8480  EDI=c00b83e0
+00042885474i[CPU0 ] | IOPL=0 id vip vif ac vm rf nt of df if tf sf ZF af PF cf
+00042885474i[CPU0 ] | SEG sltr(index|ti|rpl)     base    limit G D
+00042885474i[CPU0 ] |  CS:0008( 0001| 0|  0) 00000000 ffffffff 1 1
+00042885474i[CPU0 ] |  DS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+00042885474i[CPU0 ] |  SS:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+00042885474i[CPU0 ] |  ES:0010( 0002| 0|  0) 00000000 ffffffff 1 1
+00042885474i[CPU0 ] |  FS:0000( 0000| 0|  0) 00000000 00000000 0 0
+00042885474i[CPU0 ] |  GS:0018( 0003| 0|  0) c00b8000 00007fff 1 1
+00042885474i[CPU0 ] | EIP=c00018e4 (c00018e4)
+00042885474i[CPU0 ] | CR0=0xe0000011 CR2=0x00000000
+00042885474i[CPU0 ] | CR3=0x00100000 CR4=0x00000000
+00042885474i[CMOS ] Last time is 1642496874 (Tue Jan 18 17:07:54 2022)
+00042885474i[XGUI ] Exit
+00042885474i[CTRL ] quit_sim called with exit code 0
