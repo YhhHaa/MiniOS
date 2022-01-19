@@ -9,7 +9,7 @@ ASFLAGS = -f elf
 CFLAGS = -Wall $(LIB) -m32 -c -fno-builtin -W -Wstrict-prototypes -Wmissing-prototypes
 LDFLASG = -m elf_i386 -Ttext $(ENTRY_POINT) -e main -Map $(BUILD_DIR)/kernel.map
 OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o $(BUILD_DIR)/timer.o  \
-    $(BUILD_DIR)/kernel.o $(BUILD_DIR)/print.o $(BUILD_DIR)/debug.o 
+    $(BUILD_DIR)/kernel.o $(BUILD_DIR)/print.o $(BUILD_DIR)/debug.o
 
 
 # C代码编译
@@ -35,25 +35,36 @@ $(BUILD_DIR)/kernel.o: lib/kernel/kernel.S
 $(BUILD_DIR)/print.o: lib/kernel/print.S
 	$(AS) $(ASFLAGS) $< -o $@
 
+$(BIN_DIR)/mbr.bin: lib/mbr.S
+	$(AS) $< -o $@
+
+$(BIN_DIR)/loader.bin: lib/loader.S
+	$(AS) $< -o $@
+
 # 链接所有目标文件
 $(BIN_DIR)/kernel.bin: $(OBJS)
 	$(LD) $(LDFLASG) $^ -o $@
 
-.PHONY: mk_dir hd clean all
+.PHONY: mk_dir hd clean all run
 
-mk_dir:
+mk_dir: 
 	if [ ! -d $(BUILD_DIR) ]; then mkdir $(BUILD_DIR); fi
 
 hd:
-	dd if=$(BIN_DIR)/kernel.bin  of=../bochs/hd60M.img bs=512 count=200 seek=9 conv=notrunc
+	dd if=$(BIN_DIR)/mbr.bin of=../bochs/hd60M.img bs=512 count=0 conv=notrunc
+	dd if=$(BIN_DIR)/loader.bin of=../bochs/hd60M.img bs=512 count=5 seek=2 conv=notrunc
+	dd if=$(BIN_DIR)/kernel.bin of=../bochs/hd60M.img bs=512 count=200 seek=9 conv=notrunc
 
 clean:
 	rm -f $(BUILD_DIR)/*
 	rm -f $(BIN_DIR)/*
 
-build: $(BIN_DIR)/kernel.bin
+build: $(BIN_DIR)/kernel.bin $(BIN_DIR)/mbr.bin $(BIN_DIR)/loader.bin
 
-all: mk_dir build hd
+run:
+	../bochs/bin/bochs -f ../bochs/bochsrc.disk
+
+all: mk_dir build hd run
 
 # # mbr
 # nasm -I ./include -o ./bin/mbr.bin ./lib/mbr.S
