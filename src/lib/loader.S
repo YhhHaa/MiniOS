@@ -24,7 +24,7 @@ total_mem_bytes dd 0
 
 ; -----------------gdt point---------------
 gdt_ptr     dw      GDT_LIMIT
-            		dd      GDT_BASE
+            dd      GDT_BASE
 
 
 ; total_mem_bytes4+gdt_ptr6+ards_buff244+ards_nr2, total: 256B.
