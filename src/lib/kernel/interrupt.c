@@ -10,7 +10,7 @@
 #define PIC_S_DATA 0xa1 // 从片数据端口
 #define IDT_DESC_CNT 0x21 // 目前支持的中断数
 #define EFLAGS_IF 0x00000200
-#define GET_EFLAGS(EFLAG_VAR) asm volatile("pushfl; popl %0": "=g"(EFLAG_VAR))
+# define GET_EFLAGS(EFLAG_VAR) asm volatile ("pushfl; popl %0" : "=g" (EFLAG_VAR))
 
 
 // 中断门描述符结构体
