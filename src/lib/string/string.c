@@ -55,7 +55,7 @@ uint32_t strlen(const char* str) {
 }
 
 // 比较两个字符串
-int8_t strlen(const char* a, const char* b) {
+int8_t strcmp(const char* a, const char* b) {
 	ASSERT(a != NULL && b != NULL);
 	while(*a != 0 && *a == *b) {
 		a++;

@@ -9,7 +9,8 @@ ASFLAGS = -f elf
 CFLAGS = -Wall $(LIB) -m32 -c -fno-builtin -W -Wstrict-prototypes -Wmissing-prototypes
 LDFLASG = -m elf_i386 -Ttext $(ENTRY_POINT) -e main -Map $(BUILD_DIR)/kernel.map
 OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o $(BUILD_DIR)/timer.o  \
-    $(BUILD_DIR)/kernel.o $(BUILD_DIR)/print.o $(BUILD_DIR)/debug.o
+    $(BUILD_DIR)/kernel.o $(BUILD_DIR)/print.o $(BUILD_DIR)/debug.o $(BUILD_DIR)/memory.o $(BUILD_DIR)/bitmap.o \
+	$(BUILD_DIR)/string.o
 
 
 # C代码编译
@@ -27,6 +28,16 @@ $(BUILD_DIR)/timer.o: lib/device/timer.c include/device/timer.h include/kernel/s
 
 $(BUILD_DIR)/debug.o: lib/kernel/debug.c include/kernel/debug.h include/kernel/print.h include/kernel/stdint.h include/kernel/interrupt.h
 	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/memory.o: lib/kernel/memory.c include/kernel/memory.h include/kernel/stdint.h include/kernel/print.h include/kernel/bitmap.h
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/bitmap.o: lib/kernel/bitmap.c include/kernel/bitmap.h include/kernel/stdint.h include/string/string.h include/kernel/print.h include/kernel/interrupt.h include/kernel/debug.h
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/string.o: lib/string/string.c include/string/string.h include/kernel/global.h include/kernel/debug.h
+	$(CC) $(CFLAGS) $< -o $@
+
 
 # 汇编代码编译
 $(BUILD_DIR)/kernel.o: lib/kernel/kernel.S

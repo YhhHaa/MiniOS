@@ -10,3 +10,5 @@
 ![](https://raw.githubusercontent.com/yetao0806/CloudImage/main/MNIOS20220119202633.png)
 ### 3. 内核文件
 ![](https://raw.githubusercontent.com/yetao0806/CloudImage/main/MNIOS20220119202706.png)
+#### 1. 内存管理
+初始化
