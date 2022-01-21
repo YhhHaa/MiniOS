@@ -14,7 +14,7 @@ OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o $(BUILD_
 
 
 # C代码编译
-$(BUILD_DIR)/main.o: lib/kernel/main.c include/kernel/print.h include/kernel/stdint.h include/kernel/init.h
+$(BUILD_DIR)/main.o: lib/kernel/main.c include/kernel/print.h include/kernel/stdint.h include/kernel/init.h include/kernel/memory.h
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/init.o: lib/kernel/init.c include/kernel/init.h include/kernel/print.h include/kernel/stdint.h include/kernel/interrupt.h include/device/timer.h
@@ -29,7 +29,7 @@ $(BUILD_DIR)/timer.o: lib/device/timer.c include/device/timer.h include/kernel/s
 $(BUILD_DIR)/debug.o: lib/kernel/debug.c include/kernel/debug.h include/kernel/print.h include/kernel/stdint.h include/kernel/interrupt.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/memory.o: lib/kernel/memory.c include/kernel/memory.h include/kernel/stdint.h include/kernel/print.h include/kernel/bitmap.h
+$(BUILD_DIR)/memory.o: lib/kernel/memory.c include/kernel/memory.h include/kernel/stdint.h include/kernel/print.h include/kernel/bitmap.h include/kernel/debug.h include/string/string.h include/kernel/global.h
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/bitmap.o: lib/kernel/bitmap.c include/kernel/bitmap.h include/kernel/stdint.h include/string/string.h include/kernel/print.h include/kernel/interrupt.h include/kernel/debug.h
