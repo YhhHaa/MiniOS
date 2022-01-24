@@ -5,8 +5,6 @@
 #include "../../include/kernel/memory.h"
 
 
-#define PG_SIZE 4096
-
 // 由kernel_thread去执行function(func_arg)
 static void kernel_thread(thread_func* function, void* func_arg) {
 	function(func_arg);

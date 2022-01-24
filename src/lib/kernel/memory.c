@@ -7,26 +7,6 @@
 #include "../../include/kernel/global.h"
 
 
-#define PDE_IDX(addr) ((addr & 0xffc00000) >> 22) // 在页目录表中定位pde
-#define PTE_IDX(addr) ((addr & 0x003ff000) >> 12) // 在页表中定位pte
-
-
-// 页尺寸4KB
-#define PG_SIZE 4096
-/* 
-因为0xc009f000是内核主线程栈顶, 0xc009e000是内核主线程pcb, 因为一个pcb要占满1kb
-一个页框4KB大小的位图可以表示128MB的内存, 预计使用4页位图, 位图位置安排在地址0xc009e000 - 4kb = 0xc009a000
-这样本系统最大支持4个页框的位图, 即512MB
- */
-#define MEM_BITMAP_BASE 0xc009a000
-/* 
-0xc0000000是内核从虚拟地址3G起, 通过页表已经将0xc0000000-0xc00fffff映射到了0x00000000-0x000fffff
-低段1MB内存.0x0010_0000是指跨过低段1MB内存, 使虚拟地址在逻辑上连续
-注意页目录表0x100000~0x101fff, 堆内存的映射需要绕过页目录表
- */
-#define K_HEAP_START 0xc0100000
-
-
 // 物理内存池结构体
 struct pool {
 	struct bitmap pool_bitmap; //本内存池用到的位图结构, 用于管理物理内存
@@ -231,7 +211,7 @@ static void mem_pool_init(uint32_t all_mem) {
 	put_str("mem_pool_init done\n");
 }
 
-void mem_init() {
+void mem_init(void) {
 	put_str("mem_init start\n");
 	uint32_t mem_bytes_total = (*(uint32_t*)(0xb00));
 	mem_pool_init(mem_bytes_total);

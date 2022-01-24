@@ -14,7 +14,7 @@ OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o $(BUILD_
 
 
 # C代码编译
-$(BUILD_DIR)/main.o: lib/kernel/main.c include/kernel/print.h include/kernel/stdint.h include/kernel/init.h include/thread/thread.h include/kernel/memory.h
+$(BUILD_DIR)/main.o: lib/kernel/main.c include/kernel/print.h include/kernel/init.h include/thread/thread.h
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/init.o: lib/kernel/init.c include/kernel/init.h include/kernel/print.h include/kernel/stdint.h include/kernel/interrupt.h include/device/timer.h
@@ -63,6 +63,7 @@ $(BIN_DIR)/kernel.bin: $(OBJS)
 
 mk_dir: 
 	if [ ! -d $(BUILD_DIR) ]; then mkdir $(BUILD_DIR); fi
+	if [ ! -d $(BIN_DIR) ]; then mkdir $(BIN_DIR); fi
 
 hd:
 	dd if=$(BIN_DIR)/mbr.bin of=../bochs/hd60M.img bs=512 count=0 conv=notrunc
@@ -80,30 +81,3 @@ run:
 
 all: mk_dir build hd run
 
-# # mbr
-# nasm -I ./include -o ./bin/mbr.bin ./lib/mbr.S
-# dd if=./bin/mbr.bin of=../bochs/hd60M.img bs=512 count=1 conv=notrunc
-
-# # loader
-# nasm -I ./include -o ./bin/loader.bin ./lib/loader.S
-# dd if=./bin/loader.bin of=../bochs/hd60M.img bs=512 count=5 seek=2 conv=notrunc
-
-# # kernel
-# #   main.c
-# gcc -I ./include -m32 -c -fno-builtin -o ./temp/main.o ./lib/kernel/main.c 
-# #   pirnt.S
-# nasm -f elf -I ./include -o ./temp/print.o ./lib/kernel/print.S
-# #   kernel.S
-# nasm -f elf -I ./include -o ./temp/kernel.o ./lib/kernel/kernel.S
-# #   interrupt.c
-# gcc -I ./include -m32 -c -fno-builtin -o ./temp/interrupt.o ./lib/kernel/interrupt.c
-# #   init.c
-# gcc -I ./include -m32 -c -fno-builtin -o ./temp/init.o ./lib/kernel/init.c
-# #   timer.c
-# gcc -I ./include -m32 -c -o ./temp/timer.o ./lib/device/timer.c
-# #   connect
-# ld -m elf_i386 -Ttext 0xc0001500 -e main -o ./bin/kernel.bin ./temp/main.o ./temp/init.o  \
-#     ./temp/interrupt.o ./temp/print.o ./temp/kernel.o ./temp/timer.o
-
-# #   write into kernel
-# dd if=./bin/kernel.bin of=../bochs/hd60M.img bs=512 count=200 seek=9 conv=notrunc
