@@ -119,3 +119,41 @@ void thread_init(void) {
 	make_main_thread();
 	put_str("thread_init done\n");
 }
+
+// 当前线程将自己阻塞, 标志其状态为stat
+void thread_block(enum task_status stat) {
+	// stat取值为TASK_RUNNING, TASK_WAITING, TASK_HANGING不被调度
+	ASSERT((stat == TASK_BLOCKED) || (stat == TASK_WATTING) || (stat == TASK_HANGING));
+
+	// 关闭中断
+	enum intr_status old_status = intr_disable();
+
+	// 切换当前线程到其他队列状态
+	struct task_struct* cur_thread = running_thread();
+	cur_thread->status = stat;
+	schedule(); // 将当前线程换下处理器
+
+	// 恢复中断
+	intr_set_status(old_status);
+}
+
+// 将线程pthread解除阻塞, 放到就绪队列中
+void thread_unblock(struct task_struct* pthread) {
+	// 关闭中断
+	enum intr_status old_status = intr_disable();
+
+	// stat取值为TASK_RUNNING, TASK_WAITING, TASK_HANGING不被调度
+	ASSERT((pthread->status == TASK_BLOCKED) || (pthread->status == TASK_WATTING) || (pthread->status == TASK_HANGING));
+
+	if(pthread->status != TASK_READY) {
+		ASSERT(!elem_find(&thread_ready_list, &pthread->general_tag));
+		if(elem_find(&thread_ready_list, &pthread->general_tag)) {
+			PANIC("thread_unblock: blocked thread in ready_list\n");
+		}
+		list_push(&thread_ready_list, &pthread->general_tag);
+		pthread->status = TASK_READY;
+	}
+
+	// 恢复中断
+	intr_set_status(old_status);
+}
