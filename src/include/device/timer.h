@@ -2,6 +2,13 @@
 #define __DEVICE_TIMER_H
 
 
+#include "../kernel/io.h"
+#include "../kernel/print.h"
+#include "../thread/thread.h"
+#include "../kernel/debug.h"
+#include "../kernel/interrupt.h"
+
+
 #define IRQ0_FREQUENCY 100
 #define INPUT_FREQUENCY 1193180
 #define COUNTER0_VALUE INPUT_FREQUENCY / IRQ0_FREQUENCY

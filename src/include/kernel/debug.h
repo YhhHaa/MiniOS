@@ -2,6 +2,10 @@
 #define __KERNEL_DEBUG_H
 
 
+#include "../kernel/print.h"
+#include "../kernel/interrupt.h"
+
+
 void panic_spin(char* filename, int line, const char* func, const char* condition);
 /* 
 ...: 表示可变参数

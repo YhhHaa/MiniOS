@@ -6,6 +6,25 @@ section .data
 put_int_buffer dq 0
 
 section .text
+
+global set_cursor
+set_cursor:
+	; High 8 register.
+	mov dx, 0x03d4
+	mov al, 0x0e
+	out dx, al
+	mov dx, 0x03d5
+	mov al, bh
+	out dx, al
+
+	; Low 8 register.
+	mov dx, 0x03d4
+	mov al, 0x0f
+	out dx, al
+	mov dx, 0x03d5
+	mov al, bl
+	out dx, al
+
 ; ---------- put_char ---------------------------------------------
 ; Function: Put one character in stack into at where text cursor.
 ; -----------------------------------------------------------------
@@ -97,6 +116,26 @@ put_char:
             loop .cls
             mov bx, 1920
 
+	.set_cursor:
+		; High 8 register.
+		mov dx, 0x03d4
+		mov al, 0x0e
+		out dx, al
+		mov dx, 0x03d5
+		mov al, bh
+		out dx, al
+
+		; Low 8 register.
+		mov dx, 0x03d4
+		mov al, 0x0f
+		out dx, al
+		mov dx, 0x03d5
+		mov al, bl
+		out dx, al
+		.put_char_down:
+			popad
+			ret
+
 global put_int
 put_int:
     pushad
@@ -184,25 +223,3 @@ put_str:
         pop ecx
         pop ebx
         ret
-
-
-global set_cursor
-set_cursor:
-	; High 8 register.
-	mov dx, 0x03d4
-	mov al, 0x0e
-	out dx, al
-	mov dx, 0x03d5
-	mov al, bh
-	out dx, al
-
-	; Low 8 register.
-	mov dx, 0x03d4
-	mov al, 0x0f
-	out dx, al
-	mov dx, 0x03d5
-	mov al, bl
-	out dx, al
-	.put_char_down:
-            popad
-            ret

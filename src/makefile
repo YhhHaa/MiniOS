@@ -10,35 +10,38 @@ CFLAGS = -Wall $(LIB) -m32 -c -fno-builtin -W -Wstrict-prototypes -Wmissing-prot
 LDFLASG = -m elf_i386 -Ttext $(ENTRY_POINT) -e main -Map $(BUILD_DIR)/kernel.map
 OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o $(BUILD_DIR)/timer.o  \
     $(BUILD_DIR)/kernel.o $(BUILD_DIR)/print.o $(BUILD_DIR)/debug.o $(BUILD_DIR)/memory.o $(BUILD_DIR)/bitmap.o \
-	$(BUILD_DIR)/thread.o $(BUILD_DIR)/string.o
+	$(BUILD_DIR)/thread.o $(BUILD_DIR)/string.o $(BUILD_DIR)/switch.o $(BUILD_DIR)/list.o
 
 
 # C代码编译
 $(BUILD_DIR)/main.o: lib/kernel/main.c include/kernel/print.h include/kernel/init.h include/thread/thread.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/init.o: lib/kernel/init.c include/kernel/init.h include/kernel/print.h include/kernel/stdint.h include/kernel/interrupt.h include/device/timer.h
+$(BUILD_DIR)/init.o: lib/kernel/init.c include/kernel/init.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/interrupt.o: lib/kernel/interrupt.c include/kernel/interrupt.h include/kernel/stdint.h include/kernel/global.h include/kernel/io.h include/kernel/print.h
+$(BUILD_DIR)/interrupt.o: lib/kernel/interrupt.c include/kernel/interrupt.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/timer.o: lib/device/timer.c include/device/timer.h include/kernel/stdint.h include/kernel/io.h include/kernel/print.h
+$(BUILD_DIR)/timer.o: lib/device/timer.c include/device/timer.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/debug.o: lib/kernel/debug.c include/kernel/debug.h include/kernel/print.h include/kernel/stdint.h include/kernel/interrupt.h
+$(BUILD_DIR)/debug.o: lib/kernel/debug.c include/kernel/debug.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/memory.o: lib/kernel/memory.c include/kernel/memory.h include/kernel/stdint.h include/kernel/print.h include/kernel/bitmap.h include/kernel/debug.h include/string/string.h include/kernel/global.h
+$(BUILD_DIR)/memory.o: lib/kernel/memory.c include/kernel/memory.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/bitmap.o: lib/kernel/bitmap.c include/kernel/bitmap.h include/kernel/stdint.h include/string/string.h include/kernel/print.h include/kernel/interrupt.h include/kernel/debug.h
+$(BUILD_DIR)/bitmap.o: lib/kernel/bitmap.c include/kernel/bitmap.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/thread.o: lib/thread/thread.c include/thread/thread.h include/kernel/stdint.h include/string/string.h include/kernel/global.h include/kernel/memory.h
+$(BUILD_DIR)/thread.o: lib/thread/thread.c include/thread/thread.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/string.o: lib/string/string.c include/string/string.h include/kernel/global.h include/kernel/debug.h
+$(BUILD_DIR)/string.o: lib/string/string.c include/string/string.h
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/list.o: lib/kernel/list.c include/kernel/list.h
 	$(CC) $(CFLAGS) $< -o $@
 
 
@@ -54,6 +57,10 @@ $(BIN_DIR)/mbr.bin: lib/mbr.S
 
 $(BIN_DIR)/loader.bin: lib/loader.S
 	$(AS) $< -o $@
+
+$(BUILD_DIR)/switch.o: lib/thread/switch.S
+	$(AS) $(ASFLAGS) $< -o $@
+
 
 # 链接所有目标文件
 $(BIN_DIR)/kernel.bin: $(OBJS)

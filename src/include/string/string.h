@@ -2,7 +2,10 @@
 #define __LIB_STRING_H
 
 
-#include "stdint.h"
+#include "./stdint.h"
+#include "../kernel/global.h"
+#include "../kernel/debug.h"
+
 #define NULL 0
 
 void memset(void* dst_,uint8_t value,uint32_t size);

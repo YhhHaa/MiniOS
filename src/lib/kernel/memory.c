@@ -1,10 +1,4 @@
 #include "../../include/kernel/memory.h"
-#include "../../include/kernel/stdint.h"
-#include "../../include/kernel/print.h"
-#include "../../include/kernel/bitmap.h"
-#include "../../include/kernel/debug.h"
-#include "../../include/string/string.h"
-#include "../../include/kernel/global.h"
 
 
 // 物理内存池结构体

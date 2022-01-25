@@ -1,5 +1,4 @@
 #include "../../include/kernel/list.h"
-#include "../../include/kernel/interrupt.h"
 
 
 // 初始化双向链表list

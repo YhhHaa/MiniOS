@@ -1,8 +1,4 @@
 #include "../../include/kernel/interrupt.h"
-#include "../../include/kernel/stdint.h"
-#include "../../include/kernel/global.h"
-#include "../../include/kernel/io.h"
-#include "../../include/kernel/print.h"
 
 
 #define PIC_M_CTRL 0x20 // 主片控制端口
@@ -92,7 +88,7 @@ static void general_intr_handler(uint8_t vec_nr) {
 
 	// 打印异常信息
 	set_cursor(0);
-	put_str("!!!!!!!!!! excetion message begin !!!!!!!!!!!\n");
+	put_str("\n!!!!!!!!!! excetion message begin !!!!!!!!!!!\n");
 	set_cursor(88); // 从第2行第8个字符开始打印
 	put_str(intr_name[vec_nr]);
     if(vec_nr == 14) { // 缺页异常打印缺页地址
@@ -101,7 +97,7 @@ static void general_intr_handler(uint8_t vec_nr) {
 		put_str("\npage fault addr is ");
 		put_int(page_fault_vaddr);
 	}
-	put_str("!!!!!!!!!! excetion message end !!!!!!!!!!!\n");
+	put_str("\n!!!!!!!!!! excetion message end !!!!!!!!!!!\n");
 	while(1);
 }
 

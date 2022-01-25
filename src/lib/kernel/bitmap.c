@@ -1,9 +1,4 @@
 #include "../../include/kernel/bitmap.h"
-#include "../../include/kernel/stdint.h"
-#include "../../include/string/string.h"
-#include "../../include/kernel/print.h"
-#include "../../include/kernel/interrupt.h"
-#include "../../include/kernel/debug.h"
 
 
 // 初始化位图长度以及内容

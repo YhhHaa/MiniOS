@@ -3,6 +3,11 @@
 
 
 #include "./global.h"
+#include "../kernel/stdint.h"
+#include "../string/string.h"
+#include "../kernel/print.h"
+#include "../kernel/interrupt.h"
+#include "../kernel/debug.h"
 #define BITMAP_MASK 1
 
 

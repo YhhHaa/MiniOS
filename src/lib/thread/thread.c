@@ -1,10 +1,4 @@
 #include "../../include/thread/thread.h"
-#include "../../include/string/string.h"
-#include "../../include/kernel/global.h"
-#include "../../include/kernel/memory.h"
-#include "../../include/kernel/interrupt.h"
-#include "../../include/kernel/debug.h"
-#include "../../include/kernel/list.h"
 
 
 struct task_struct* main_thread; // 主线程PCB
@@ -115,4 +109,13 @@ void schedule() {
 	struct task_struct* next = elem2entry(struct task_struct, general_tag, thread_tag);
 	next->status = TASK_RUNNING;
 	switch_to(cur, next);
+}
+
+// 初始化线程环境
+void thread_init(void) {
+	put_str("thread_init start\n");
+	list_init(&thread_ready_list);
+	list_init(&thread_all_list);
+	make_main_thread();
+	put_str("thread_init done\n");
 }

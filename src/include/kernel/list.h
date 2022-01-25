@@ -3,6 +3,7 @@
 
 
 #include "./global.h"
+#include "../kernel/interrupt.h"
 
 
 // 将节点元素转换为实际元素项

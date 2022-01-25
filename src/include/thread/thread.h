@@ -4,6 +4,13 @@
 
 #include "../kernel/stdint.h"
 #include "../kernel/list.h"
+#include "../string/string.h"
+#include "../kernel/global.h"
+#include "../kernel/memory.h"
+#include "../kernel/interrupt.h"
+#include "../kernel/debug.h"
+#include "../kernel/list.h"
+#include "../kernel/print.h"
 
 #define PG_SIZE 4096
 
@@ -89,5 +96,6 @@ void init_thread(struct task_struct* pthread, char* name, int prio);
 struct task_struct* thread_start(char* name, int prio, thread_func function, void* func_arg);
 static void make_main_thread(void);
 void schedule();
+void thread_init(void);
 
 #endif

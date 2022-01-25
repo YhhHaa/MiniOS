@@ -1,9 +1,4 @@
-#include "../../include/kernel/io.h"
-#include "../../include/kernel/print.h"
 #include "../../include/device/timer.h"
-#include "../../include/thread/thread.h"
-#include "../../include/kernel/debug.h"
-#include "../../include/kernel/interrupt.h"
 
 
 static void frequency_set(uint8_t counter_port, \

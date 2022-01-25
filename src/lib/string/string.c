@@ -1,6 +1,4 @@
 #include "../../include/string/string.h"
-#include "../../include/kernel/global.h"
-#include "../../include/kernel/debug.h"
 
 
 // 将dst_起始的size个字节置为value

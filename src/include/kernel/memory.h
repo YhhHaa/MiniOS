@@ -2,8 +2,12 @@
 #define __KERNEL_MEMORY_H
 
 
-#include "./stdint.h"
-#include "./bitmap.h"
+#include "../kernel/stdint.h"
+#include "../kernel/print.h"
+#include "../kernel/bitmap.h"
+#include "../kernel/debug.h"
+#include "../string/string.h"
+#include "../kernel/global.h"
 
 
 // 区分在哪个内存池分配内存

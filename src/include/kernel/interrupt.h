@@ -3,6 +3,9 @@
 
 
 #include "./stdint.h"
+#include "../kernel/global.h"
+#include "../kernel/io.h"
+#include "../kernel/print.h"
 
 
 typedef void* intr_handler;
