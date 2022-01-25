@@ -6,7 +6,9 @@
 
 
 // 将节点元素转换为实际元素项
+// 获得偏移量
 #define offset(struct_type,member) (int)(&((struct_type*)0)->member)
+// 结构体-偏移量获得PCB
 #define elem2entry(struct_type, struct_member_name, elem_ptr) \
 	(struct_type*)((int)elem_ptr - offset(struct_type, struct_member_name))
 

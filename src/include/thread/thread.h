@@ -73,7 +73,7 @@ struct task_struct {
 	uint8_t ticks; // 每次在处理器上执行时间的嘀嗒数
 	uint32_t elapsed_ticks; // 此任务执行的总嘀嗒数统计
 
-	struct list_elem genral_tag; // general_tag用于线程在一般的队列中的结点
+	struct list_elem general_tag; // general_tag用于线程在一般的队列中的结点
 	struct list_elem all_list_tag; // 用于线程队列thread_all_list中的结点
 
 	uint32_t* pgdir; // 进程自己页表的虚拟地址, 线程为NULL
@@ -88,5 +88,6 @@ void thread_create(struct task_struct* pthread, thread_func function, void* func
 void init_thread(struct task_struct* pthread, char* name, int prio);
 struct task_struct* thread_start(char* name, int prio, thread_func function, void* func_arg);
 static void make_main_thread(void);
+void schedule();
 
 #endif

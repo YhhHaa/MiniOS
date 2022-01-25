@@ -4,6 +4,7 @@
 #include "../../include/kernel/memory.h"
 #include "../../include/kernel/interrupt.h"
 #include "../../include/kernel/debug.h"
+#include "../../include/kernel/list.h"
 
 
 struct task_struct* main_thread; // 主线程PCB
@@ -72,8 +73,8 @@ struct task_struct* thread_start(char* name, int prio, thread_func function, voi
 	init_thread(thread, name, prio);
 	thread_create(thread, function, func_arg);
 
-	ASSERT(!elem_find(&thread_ready_list, &thread->genral_tag)); // 确保之前不在队列中
-	list_append(&thread_ready_list, &thread->genral_tag); // 加入就绪队列
+	ASSERT(!elem_find(&thread_ready_list, &thread->general_tag)); // 确保之前不在队列中
+	list_append(&thread_ready_list, &thread->general_tag); // 加入就绪队列
 	ASSERT(!elem_find(&thread_all_list, &thread->all_list_tag));
 	list_append(&thread_all_list, &thread->all_list_tag); // 加入全部线程队列
 
@@ -88,4 +89,30 @@ static void make_main_thread(void) {
 
 	ASSERT(!elem_find(&thread_all_list, &main_thread->all_list_tag));
 	list_append(&thread_all_list, &main_thread->all_list_tag);
+}
+
+// 读写就绪队列, 实现任务调度
+void schedule() {
+	ASSERT(intr_get_status() == INTR_OFF);
+
+	struct task_struct* cur = running_thread();
+
+	// 将当前运行的线程换下
+	if(cur->status == TASK_RUNNING) {
+		// 如果是cpu时间片到了, 将其加入就绪队列尾
+		ASSERT(!elem_find(&thread_ready_list, &cur->general_tag));
+		list_append(&thread_ready_list, &cur->general_tag);
+		cur->ticks = cur->priority;
+		cur->status = TASK_READY;
+	} else {
+		// 若是需要发生某事件后才能上cpu运行, 则不需要将其加入队列中, 因为当前线程不在就绪队列中
+	}
+
+	// 将新线程换上
+	ASSERT(!list_empty(&thread_ready_list));
+	thread_tag = NULL; // thread_tag清空
+	thread_tag = list_pop(&thread_ready_list);
+	struct task_struct* next = elem2entry(struct task_struct, general_tag, thread_tag);
+	next->status = TASK_RUNNING;
+	switch_to(cur, next);
 }
