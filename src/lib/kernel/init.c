@@ -7,4 +7,5 @@ void init_all() {
     timer_init(); // 初始化PIT
 	mem_init(); // 初始化内存池
 	thread_init(); // 初始化主线程
+	console_init(); // 初始化控制台
 }

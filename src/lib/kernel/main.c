@@ -1,6 +1,7 @@
 #include "../../include/kernel/print.h"
 #include "../../include/kernel/init.h"
 #include "../../include/thread/thread.h"
+#include "../../include/device/console.h"
 
 
 void k_thread_a(void*);
@@ -16,9 +17,7 @@ int main(void) {
 
 	intr_enable(); // 打开中断, 使得时钟中断起作用
     while(1) {
-		intr_disable();
-		put_str("Main ");
-		intr_enable();
+		console_put_str("Main ");
 	}
     return 0;
 }
@@ -27,17 +26,13 @@ int main(void) {
 void k_thread_a(void* arg) {
 	char* para = arg;
 	while(1) {
-		intr_disable();
-		put_str(para);
-		intr_enable();
+		console_put_str(para);
 	}
 }
 
 void k_thread_b(void* arg) {
 	char* para = arg;
 	while(1) {
-		intr_disable();
-		put_str(para);
-		intr_enable();
+		console_put_str(para);
 	}
 }

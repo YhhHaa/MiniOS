@@ -7,6 +7,7 @@
 #include "../device/timer.h"
 #include "../kernel/memory.h"
 #include "../thread/thread.h"
+#include "../device/console.h"
 
 void init_all(void);
 
