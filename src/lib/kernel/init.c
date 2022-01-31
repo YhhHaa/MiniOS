@@ -8,4 +8,5 @@ void init_all() {
 	mem_init(); // 初始化内存池
 	thread_init(); // 初始化主线程
 	console_init(); // 初始化控制台
+	keyboard_init(); // 初始化键盘中断
 }

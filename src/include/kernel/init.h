@@ -8,6 +8,7 @@
 #include "../kernel/memory.h"
 #include "../thread/thread.h"
 #include "../device/console.h"
+#include "../device/keyboard.h"
 
 void init_all(void);
 
