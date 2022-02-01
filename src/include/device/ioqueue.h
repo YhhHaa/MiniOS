@@ -8,6 +8,7 @@
 #include "../kernel/interrupt.h"
 #include "../kernel/global.h"
 #include "../kernel/debug.h"
+#include "../kernel/print.h"
 
 #define bufsize 64
 

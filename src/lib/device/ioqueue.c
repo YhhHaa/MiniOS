@@ -16,13 +16,13 @@ static int32_t next_pos(int32_t pos) {
 /* 判断队列是否已满 */
 bool ioq_full(struct ioqueue* ioq) {
 	ASSERT(intr_get_status() == INTR_OFF); // 保证原子操作
-	return next(ioq->head) == ioq->tail;
+	return next_pos(ioq->head) == ioq->tail;
 }
 
 /* 判断队列是否已空 */
 bool ioq_empty(struct ioqueue* ioq) {
 	ASSERT(intr_get_status() == INTR_OFF); // 保证原子操作
-	return ioq->head = ioq->tail;
+	return ioq->head == ioq->tail;
 }
 
 /* 使当前生产者或消费者在此缓冲区上等待 */
