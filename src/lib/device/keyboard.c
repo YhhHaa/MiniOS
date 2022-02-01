@@ -3,6 +3,9 @@
 // 定义以下变量记录相应键是否按下的状态, ext_scancode用于记录makecode是否以0xe0开头
 static bool ctrl_status, shift_status, alt_status, caps_lock_status, ext_scancode;
 
+// 定义键盘缓冲区
+struct ioqueue kbd_buf;
+
 /* 以通码make_code为索引的二维数组 */
 static char keymap[][2] = {
 /* 扫描码   未与shift组合的ASCII  与shift组合的ASCII*/
@@ -134,7 +137,12 @@ static void intr_keyboard_handler(void) {
 		char cur_char = keymap[index][shift]; // 在数组中找到对应的字符
 
 		if(cur_char) { // 只处理ASCII不为0的键
-			put_char(cur_char);
+			/* 若kbd_buf中未满且待加入的cur_char不为0,
+			则将其加入到缓冲区kbd_buf中 */
+			if(!ioq_full(&kbd_buf)) {
+				put_char(cur_char); // 临时显示
+				ioq_putchar(&kbd_buf, cur_char);
+			}
 			return;
 		}
 
@@ -156,6 +164,7 @@ static void intr_keyboard_handler(void) {
 // 注册键盘中断处理程序
 void keyboard_init() {
 	put_str("keyboard init start\n");
+	ioqueue_init(&kbd_buf);
 	register_handler(0x21, intr_keyboard_handler);
 	put_str("keyboard init done\n");
 }

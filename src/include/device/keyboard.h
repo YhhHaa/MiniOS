@@ -5,6 +5,7 @@
 #include "../kernel/interrupt.h"
 #include "../kernel/io.h"
 #include "../kernel/global.h"
+#include "../device/ioqueue.h"
 
 #define KBD_BUF_PORT 0x60 // 键盘buffer寄存器端口号为0x60
 
