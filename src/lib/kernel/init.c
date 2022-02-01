@@ -9,4 +9,5 @@ void init_all() {
 	thread_init(); // 初始化主线程
 	console_init(); // 初始化控制台
 	keyboard_init(); // 初始化键盘中断
+	tss_init(); // 初始化tss和gdt
 }

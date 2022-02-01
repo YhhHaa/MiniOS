@@ -9,6 +9,7 @@
 #include "../thread/thread.h"
 #include "../device/console.h"
 #include "../device/keyboard.h"
+#include "../userprog/tss.h"
 
 void init_all(void);
 
