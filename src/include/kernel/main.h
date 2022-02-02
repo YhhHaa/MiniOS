@@ -7,8 +7,6 @@
 #include "../device/console.h"
 #include "../device/ioqueue.h"
 #include "../device/keyboard.h"
-
-void k_thread_a(void*);
-void k_thread_b(void*);
+#include "../userprog/process.h"
 
 #endif

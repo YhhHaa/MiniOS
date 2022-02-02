@@ -11,6 +11,8 @@
 #include "../kernel/debug.h"
 #include "../kernel/list.h"
 #include "../kernel/print.h"
+#include "../userprog/tss.h"
+#include "../userprog/process.h"
 
 #define PG_SIZE 4096
 
@@ -83,8 +85,8 @@ struct task_struct {
 	struct list_elem general_tag; // general_tag用于线程在一般的队列中的结点
 	struct list_elem all_list_tag; // 用于线程队列thread_all_list中的结点
 
-	uint32_t* pgdir; // 进程自己页表的虚拟地址, 线程为NULL
-
+	uint32_t* pgdir; // 进程自己页目录表的虚拟地址, 线程为NULL
+	struct virtual_addr* userprog_vaddr; // 用户进程的虚拟地址
 	uint32_t stack_magic; // 栈的边界标记, 用于检测栈的溢出
 };
 
@@ -100,5 +102,12 @@ void schedule();
 void thread_init(void);
 void thread_block(enum task_status stat);
 void thread_unblock(struct task_struct* pthread);
+
+struct task_struct* main_thread; // 主线程PCB
+struct list thread_ready_list; // 就绪队列
+struct list thread_all_list; // 所有任务队列
+static struct list_elem* thread_tag; // 用于保存队列中的线程结点
+
+extern void switch_to(struct task_struct* cur, struct task_struct* next);
 
 #endif

@@ -12,3 +12,8 @@
 ![](https://raw.githubusercontent.com/yetao0806/CloudImage/main/MNIOS20220119202706.png)
 #### 1. 内存管理
 初始化
+
+## 2. 遇到问题
+### 线程调度
+通过`ret`得到栈中的返回地址执行, 导致第一次执行的`unused_addr`占位符如果是线程只执行一条语句返回,
+则会出现`valid opcode exception`

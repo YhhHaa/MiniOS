@@ -8,6 +8,7 @@
 #include "../kernel/debug.h"
 #include "../string/string.h"
 #include "../kernel/global.h"
+#include "../thread/sync.h"
 
 
 // 区分在哪个内存池分配内存
@@ -60,5 +61,8 @@ void* malloc_page(enum pool_flags pf, uint32_t pg_cnt);
 void* get_kernel_pages(uint32_t pg_cnt);
 static void mem_pool_init(uint32_t all_mem);
 void mem_init(void);
+void* get_user_pages(uint32_t pg_cnt);
+void* get_a_page(enum pool_flags pf, uint32_t vaddr);
+uint32_t addr_v2p(uint32_t vaddr);
 
 #endif

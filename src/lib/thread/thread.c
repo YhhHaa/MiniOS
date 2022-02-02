@@ -1,14 +1,6 @@
 #include "../../include/thread/thread.h"
 
 
-struct task_struct* main_thread; // 主线程PCB
-struct list thread_ready_list; // 就绪队列
-struct list thread_all_list; // 所有任务队列
-static struct list_elem* thread_tag; // 用于保存队列中的线程结点
-
-extern void switch_to(struct task_struct* cur, struct task_struct* next);
-
-
 // 获取当前进程PCB指针
 struct task_struct* running_thread() {
 	uint32_t esp;
@@ -108,6 +100,10 @@ void schedule() {
 	thread_tag = list_pop(&thread_ready_list);
 	struct task_struct* next = elem2entry(struct task_struct, general_tag, thread_tag);
 	next->status = TASK_RUNNING;
+
+	// 激活任务页表
+	process_activate(next);
+
 	switch_to(cur, next);
 }
 

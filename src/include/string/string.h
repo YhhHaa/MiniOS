@@ -6,8 +6,6 @@
 #include "../kernel/global.h"
 #include "../kernel/debug.h"
 
-#define NULL 0
-
 void memset(void* dst_,uint8_t value,uint32_t size);
 void memcpy(void* dst_,const void* src_,uint32_t size);
 int memcmp(const void* a_,const void* b_, uint32_t size);
