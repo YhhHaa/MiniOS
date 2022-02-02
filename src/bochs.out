@@ -30,7 +30,7 @@
 00000000000i[     ]   SB16 support: no
 00000000000i[     ]   USB support: no
 00000000000i[     ]   VGA extension support: vbe
-00000000000i[MEM0 ] allocated memory at 0x7f912353b010. after alignment, vector=0x7f912353c000
+00000000000i[MEM0 ] allocated memory at 0x7f407a50f010. after alignment, vector=0x7f407a510000
 00000000000i[MEM0 ] 32.00MB
 00000000000i[MEM0 ] mem block size = 0x00100000, blocks=32
 00000000000i[MEM0 ] rom at 0xfffe0000/131072 ('/home/miele/Desktop/MiniOS/bochs/share/bochs/BIOS-bochs-latest')
@@ -40,7 +40,7 @@
 00000000000i[DEV  ] PIIX3 PCI-to-ISA bridge present at device 1, function 0
 00000000000i[     ] init_dev of 'cmos' plugin device by virtual method
 00000000000i[CMOS ] Using local time for initial clock
-00000000000i[CMOS ] Setting initial clock to: Wed Feb  2 22:45:24 2022 (time0=1643813124)
+00000000000i[CMOS ] Setting initial clock to: Wed Feb  2 22:49:43 2022 (time0=1643813383)
 00000000000i[     ] init_dev of 'dma' plugin device by virtual method
 00000000000i[DMA  ] channel 4 used by cascade
 00000000000i[     ] init_dev of 'pic' plugin device by virtual method
@@ -268,6 +268,6 @@
 00022234156i[CPU0 ] | EIP=0000fff0 (0000fff0)
 00022234156i[CPU0 ] | CR0=0x60000010 CR2=0x00000000
 00022234156i[CPU0 ] | CR3=0x00000000 CR4=0x00000000
-00022234156i[CMOS ] Last time is 1643813129 (Wed Feb  2 22:45:29 2022)
+00022234156i[CMOS ] Last time is 1643813388 (Wed Feb  2 22:49:48 2022)
 00022234156i[XGUI ] Exit
 00022234156i[CTRL ] quit_sim called with exit code 0
