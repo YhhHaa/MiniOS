@@ -10,4 +10,5 @@ void init_all() {
 	console_init(); // 初始化控制台
 	keyboard_init(); // 初始化键盘中断
 	tss_init(); // 初始化tss和gdt
+	syscall_init(); //　初始化系统调用
 }

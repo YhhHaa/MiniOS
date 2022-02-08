@@ -47,3 +47,8 @@
 	);														\
 	retval;													\
 })
+
+// 返回当前任务pid
+uint32_t getpid() {
+	return __syscall0(SYS_GETPID);
+}

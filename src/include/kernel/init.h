@@ -10,6 +10,7 @@
 #include "../device/console.h"
 #include "../device/keyboard.h"
 #include "../userprog/tss.h"
+#include "../userprog/syscall-init.h"
 
 void init_all(void);
 
