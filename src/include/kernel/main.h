@@ -8,5 +8,7 @@
 #include "../device/ioqueue.h"
 #include "../device/keyboard.h"
 #include "../userprog/process.h"
+#include "../user/syscall.h"
+#include "../userprog/syscall-init.h"
 
 #endif
