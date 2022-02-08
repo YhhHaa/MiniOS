@@ -32,9 +32,21 @@ void thread_create(struct task_struct* pthread, thread_func function, void* func
 	kthread_stack->ebp = kthread_stack->ebx = kthread_stack->esi = kthread_stack->edi = 0;
 }
 
+// 分配pid
+static pid_t allocate_pid(void) {
+	static pid_t next_pid = 0;
+	lock_acquire(&pid_lock);
+	next_pid++;
+	lock_release(&pid_lock);
+	return next_pid;
+}
+
+
 // 初始化线程基本信息PCB
 void init_thread(struct task_struct* pthread, char* name, int prio) {
 	memset(pthread, 0, sizeof(*pthread)); // 清空pcb内容
+
+	pthread->pid = allocate_pid(); // 分配pid
 	strcpy(pthread->name, name);
 
 	if(pthread == main_thread) {
@@ -112,6 +124,7 @@ void thread_init(void) {
 	put_str("thread_init start\n");
 	list_init(&thread_ready_list);
 	list_init(&thread_all_list);
+	lock_init(&pid_lock);
 	make_main_thread();
 	put_str("thread_init done\n");
 }

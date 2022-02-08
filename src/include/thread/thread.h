@@ -19,6 +19,9 @@
 // 自定义通用函数类型, 在很多线程函数中作为形参类型
 typedef void thread_func(void*);
 
+// 定义pid类型
+typedef int16_t pid_t;
+
 // 进场或线程的状态
 enum task_status {
 	TASK_RUNNING,
@@ -75,6 +78,8 @@ struct thread_stack {
 struct task_struct {
 	uint32_t* self_kstack; // 各内核线程都用自己的内核栈, 自身PCB所在页的顶端
 
+	pid_t pid; // 定义pid
+
 	enum task_status status; // 线程状态
 	char name[16]; // 任务名
 	uint8_t priority; // 线程优先级
@@ -107,6 +112,8 @@ struct task_struct* main_thread; // 主线程PCB
 struct list thread_ready_list; // 就绪队列
 struct list thread_all_list; // 所有任务队列
 static struct list_elem* thread_tag; // 用于保存队列中的线程结点
+
+struct lock pid_lock; // pid锁
 
 extern void switch_to(struct task_struct* cur, struct task_struct* next);
 
