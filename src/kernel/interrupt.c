@@ -75,11 +75,9 @@ static void idt_desc_init(void) {
    for (i = 0; i < IDT_DESC_CNT; i++) {
       make_idt_desc(&idt[i], IDT_DESC_ATTR_DPL0, intr_entry_table[i]); 
    }
-
-   // 下面加入系统调用的处理函数
-   // 新加入syscall的中断处理程序,由于要传入子系统调用号给系统调用程序,所以不能和上面的中断处理程序一样。
-   // 记得给此描述符的dpl指定为用户级,若指定为0级,则在3级环境下执行int指令会产生GP错误。
-   make_idt_desc(&idt[lastindex], IDT_DESC_ATTR_DPL3, syscall_handler); 
+/* 单独处理系统调用,系统调用对应的中断门dpl为3,
+ * 中断处理程序为单独的syscall_handler */
+   make_idt_desc(&idt[lastindex], IDT_DESC_ATTR_DPL3, syscall_handler);
    put_str("   idt_desc_init done\n");
 }
 

@@ -65,7 +65,7 @@ IRQ0_FREQUENCY	device/timer.c	8;"	d	file:
 KBD_BUF_PORT	device/keyboard.c	8;"	d	file:
 K_HEAP_START	kernel/memory.c	21;"	d	file:
 LD	makefile	/^LD = ld$/;"	m
-LDFLAGS	makefile	/^LDFLAGS = -m elf_i386 -Ttext $(ENTRY_POINT) -e main -Map $(BUILD_DIR)\/kernel.map$/;"	m
+LDFLAGS	makefile	/^LDFLAGS = -melf_i386 -Ttext $(ENTRY_POINT) -e main -Map $(BUILD_DIR)\/kernel.map$/;"	m
 LIB	makefile	/^LIB = -I lib\/ -I lib\/kernel\/ -I lib\/user\/ -I kernel\/ -I device\/ -I thread\/  -I userprog\/$/;"	m
 MEM_BITMAP_BASE	kernel/memory.c	14;"	d	file:
 NULL	kernel/global.h	119;"	d
@@ -107,7 +107,8 @@ SELECTOR_U_STACK	kernel/global.h	44;"	d
 SELECTOR_VIDEO	boot/loader.S	/^   SELECTOR_VIDEO equ (0x0003<<3) + TI_GDT + RPL0	 ; 同上 $/;"	d
 SELECTOR_VIDEO	lib/kernel/print.S	/^SELECTOR_VIDEO equ (0x0003<<3) + TI_GDT + RPL0$/;"	d
 SYSCALL_NR	lib/user/syscall.h	/^enum SYSCALL_NR {$/;"	g
-SYS_GETPID	lib/user/syscall.h	/^   SYS_GETPID$/;"	e	enum:SYSCALL_NR
+SYS_GETPID	lib/user/syscall.h	/^   SYS_GETPID,$/;"	e	enum:SYSCALL_NR
+SYS_WRITE	lib/user/syscall.h	/^   SYS_WRITE$/;"	e	enum:SYSCALL_NR
 TASK_BLOCKED	thread/thread.h	/^   TASK_BLOCKED,$/;"	e	enum:task_status
 TASK_DIED	thread/thread.h	/^   TASK_DIED$/;"	e	enum:task_status
 TASK_HANGING	thread/thread.h	/^   TASK_HANGING,$/;"	e	enum:task_status
@@ -185,6 +186,7 @@ __LIB_KERNEL_BITMAP_H	lib/kernel/bitmap.h	2;"	d
 __LIB_KERNEL_LIST_H	lib/kernel/list.h	2;"	d
 __LIB_KERNEL_PRINT_H	lib/kernel/print.h	2;"	d
 __LIB_STDINT_H	lib/stdint.h	2;"	d
+__LIB_STDIO_H	lib/stdio.h	2;"	d
 __LIB_STRING_H	lib/string.h	2;"	d
 __LIB_USER_SYSCALL_H	lib/user/syscall.h	2;"	d
 __THREAD_SYNC_H	thread/sync.h	2;"	d
@@ -195,7 +197,7 @@ __USERPROG_TSS_H	userprog/tss.h	2;"	d
 _syscall0	lib/user/syscall.c	4;"	d	file:
 _syscall1	lib/user/syscall.c	16;"	d	file:
 _syscall2	lib/user/syscall.c	28;"	d	file:
-_syscall3	lib/user/syscall.c	43;"	d	file:
+_syscall3	lib/user/syscall.c	40;"	d	file:
 addr_v2p	kernel/memory.c	/^uint32_t addr_v2p(uint32_t vaddr) {$/;"	f
 all_list_tag	thread/thread.h	/^   struct list_elem all_list_tag;$/;"	m	struct:task_struct	typeref:struct:task_struct::list_elem
 allocate_pid	thread/thread.c	/^static pid_t allocate_pid(void) {$/;"	f	file:
@@ -359,6 +361,7 @@ ioq_putchar	device/ioqueue.c	/^void ioq_putchar(struct ioqueue* ioq, char byte) 
 ioq_wait	device/ioqueue.c	/^static void ioq_wait(struct task_struct** waiter) {$/;"	f	file:
 ioqueue	device/ioqueue.h	/^struct ioqueue {$/;"	s
 ioqueue_init	device/ioqueue.c	/^void ioqueue_init(struct ioqueue* ioq) {$/;"	f
+itoa	lib/stdio.c	/^static void itoa(uint32_t value, char** buf_ptr_addr, uint8_t base) {$/;"	f	file:
 k_thread_a	kernel/main.c	/^void k_thread_a(void* arg) {     $/;"	f
 k_thread_b	kernel/main.c	/^void k_thread_b(void* arg) {     $/;"	f
 kbd_buf	device/keyboard.c	/^struct ioqueue kbd_buf;	   \/\/ 定义键盘缓冲区$/;"	v	typeref:struct:ioqueue
@@ -418,7 +421,7 @@ pde_ptr	kernel/memory.c	/^uint32_t* pde_ptr(uint32_t vaddr) {$/;"	f
 pgdir	thread/thread.h	/^   uint32_t* pgdir;              \/\/ 进程自己页表的虚拟地址$/;"	m	struct:task_struct
 phy_addr_start	kernel/memory.c	/^   uint32_t phy_addr_start;	 \/\/ 本内存池所管理物理内存的起始地址$/;"	m	struct:pool	file:
 pic_init	kernel/interrupt.c	/^static void pic_init(void) {$/;"	f	file:
-pid	thread/thread.h	/^   uint16_t pid;$/;"	m	struct:task_struct
+pid	thread/thread.h	/^   pid_t pid;$/;"	m	struct:task_struct
 pid_lock	thread/thread.c	/^struct lock pid_lock;		    \/\/ 分配pid锁$/;"	v	typeref:struct:lock
 pid_t	thread/thread.h	/^typedef int16_t pid_t;$/;"	t
 pool	kernel/memory.c	/^struct pool {$/;"	s	file:
@@ -427,12 +430,11 @@ pool_flags	kernel/memory.h	/^enum pool_flags {$/;"	g
 pool_size	kernel/memory.c	/^   uint32_t pool_size;		 \/\/ 本内存池字节容量$/;"	m	struct:pool	file:
 pop	kernel/kernel.S	/^   pop ds$/;"	d
 prev	lib/kernel/list.h	/^   struct list_elem* prev; \/\/ 前躯结点$/;"	m	struct:list_elem	typeref:struct:list_elem::list_elem
+printf	lib/stdio.c	/^uint32_t printf(const char* format, ...) {$/;"	f
 priority	thread/thread.h	/^   uint8_t priority;$/;"	m	struct:task_struct
 process_activate	userprog/process.c	/^void process_activate(struct task_struct* p_thread) {$/;"	f
 process_execute	userprog/process.c	/^void process_execute(void* filename, char* name) { $/;"	f
 producer	device/ioqueue.h	/^    struct task_struct* producer;$/;"	m	struct:ioqueue	typeref:struct:ioqueue::task_struct
-prog_a_pid	kernel/main.c	/^int prog_a_pid = 0, prog_b_pid = 0;$/;"	v
-prog_b_pid	kernel/main.c	/^int prog_a_pid = 0, prog_b_pid = 0;$/;"	v
 pte_ptr	kernel/memory.c	/^uint32_t* pte_ptr(uint32_t vaddr) {$/;"	f
 push	kernel/kernel.S	/^   push ds$/;"	d
 put_char	lib/kernel/print.S	/^put_char:$/;"	l
@@ -480,10 +482,11 @@ strlen	lib/string.c	/^uint32_t strlen(const char* str) {$/;"	f
 strrchr	lib/string.c	/^char* strrchr(const char* str, const uint8_t ch) {$/;"	f
 switch_to	thread/switch.S	/^switch_to:$/;"	l
 sys_getpid	userprog/syscall-init.c	/^uint32_t sys_getpid(void) {$/;"	f
+sys_write	userprog/syscall-init.c	/^uint32_t sys_write(char* str) {$/;"	f
 syscall	userprog/syscall-init.c	/^typedef void* syscall;$/;"	t	file:
 syscall_handler	kernel/kernel.S	/^syscall_handler:$/;"	l
 syscall_init	userprog/syscall-init.c	/^void syscall_init(void) {$/;"	f
-syscall_nr	userprog/syscall-init.c	7;"	d	file:
+syscall_nr	userprog/syscall-init.c	9;"	d	file:
 syscall_table	userprog/syscall-init.c	/^syscall syscall_table[syscall_nr];$/;"	v
 tab	device/keyboard.c	13;"	d	file:
 tail	device/ioqueue.h	/^    int32_t tail;			    \/\/ 队尾,数据从队尾处读出$/;"	m	struct:ioqueue
@@ -519,11 +522,17 @@ unused_retaddr	thread/thread.h	/^   void (*unused_retaddr);$/;"	m	struct:thread_
 update_tss_esp	userprog/tss.c	/^void update_tss_esp(struct task_struct* pthread) {$/;"	f
 user_pool	kernel/memory.c	/^struct pool kernel_pool, user_pool;      \/\/ 生成内核内存池和用户内存池$/;"	v	typeref:struct:
 userprog_vaddr	thread/thread.h	/^   struct virtual_addr userprog_vaddr;   \/\/ 用户进程的虚拟地址$/;"	m	struct:task_struct	typeref:struct:task_struct::virtual_addr
+va_arg	lib/stdio.c	9;"	d	file:
+va_end	lib/stdio.c	10;"	d	file:
+va_list	lib/stdio.h	/^typedef char* va_list;$/;"	t
+va_start	lib/stdio.c	8;"	d	file:
 vaddr_bitmap	kernel/memory.h	/^   struct bitmap vaddr_bitmap;$/;"	m	struct:virtual_addr	typeref:struct:virtual_addr::bitmap
 vaddr_get	kernel/memory.c	/^static void* vaddr_get(enum pool_flags pf, uint32_t pg_cnt) {$/;"	f	file:
 vaddr_start	kernel/memory.h	/^   uint32_t vaddr_start;$/;"	m	struct:virtual_addr
 value	thread/sync.h	/^   uint8_t  value;$/;"	m	struct:semaphore
 vec_no	thread/thread.h	/^    uint32_t vec_no;	 \/\/ kernel.S 宏VECTOR中push %1压入的中断号$/;"	m	struct:intr_stack
 virtual_addr	kernel/memory.h	/^struct virtual_addr {$/;"	s
+vsprintf	lib/stdio.c	/^uint32_t vsprintf(char* str, const char* format, va_list ap) {$/;"	f
 waiters	thread/sync.h	/^   struct   list waiters;$/;"	m	struct:semaphore	typeref:struct:semaphore::list
 wakeup	device/ioqueue.c	/^static void wakeup(struct task_struct** waiter) {$/;"	f	file:
+write	lib/user/syscall.c	/^uint32_t write(char* str) {$/;"	f
