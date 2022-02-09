@@ -1,116 +1,148 @@
 BUILD_DIR = ./build
-BIN_DIR = ./bin
+DISK_IMG = hd3M.img
 ENTRY_POINT = 0xc0001500
 AS = nasm
 CC = gcc
 LD = ld
-LIB = -I ./include
-ASFLAGS = -f elf
-CFLAGS = -Wall $(LIB) -m32 -c -fno-builtin -W -Wstrict-prototypes -Wmissing-prototypes
-LDFLASG = -m elf_i386 -Ttext $(ENTRY_POINT) -e main -Map $(BUILD_DIR)/kernel.map
-OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o $(BUILD_DIR)/timer.o  \
-    $(BUILD_DIR)/kernel.o $(BUILD_DIR)/print.o $(BUILD_DIR)/debug.o $(BUILD_DIR)/memory.o $(BUILD_DIR)/bitmap.o \
-	$(BUILD_DIR)/thread.o $(BUILD_DIR)/string.o $(BUILD_DIR)/switch.o $(BUILD_DIR)/list.o $(BUILD_DIR)/sync.o $(BUILD_DIR)/console.o \
-	$(BUILD_DIR)/keyboard.o $(BUILD_DIR)/ioqueue.o $(BUILD_DIR)/tss.o $(BUILD_DIR)/process.o \
-	$(BUILD_DIR)/syscall-init.o $(BUILD_DIR)/syscall.o
+LIB = -I lib/ -I lib/kernel/ -I lib/user/ -I kernel/ -I device/ -I thread/  -I userprog/
+ASFLAGS = -f elf 
+ASBINLIB = -I boot/include/
+CFLAGS = -m32 -Wall $(LIB) -c -fno-builtin -W -Wstrict-prototypes \
+		 -Wmissing-prototypes 
+LDFLAGS = -m elf_i386 -Ttext $(ENTRY_POINT) -e main -Map $(BUILD_DIR)/kernel.map
+OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o \
+	   $(BUILD_DIR)/timer.o $(BUILD_DIR)/kernel.o $(BUILD_DIR)/print.o \
+	   $(BUILD_DIR)/debug.o $(BUILD_DIR)/memory.o $(BUILD_DIR)/bitmap.o \
+	   $(BUILD_DIR)/string.o $(BUILD_DIR)/thread.o $(BUILD_DIR)/list.o \
+	   $(BUILD_DIR)/switch.o  $(BUILD_DIR)/console.o $(BUILD_DIR)/sync.o \
+	   $(BUILD_DIR)/keyboard.o  $(BUILD_DIR)/ioqueue.o $(BUILD_DIR)/tss.o \
+	   $(BUILD_DIR)/process.o  $(BUILD_DIR)/syscall.o $(BUILD_DIR)/syscall-init.o
 
+##############     MBR代码编译     ############### 
+$(BUILD_DIR)/mbr.bin: boot/mbr.S 
+	$(AS) $(ASBINLIB) $< -o $@
 
-# C代码编译
-$(BUILD_DIR)/main.o: lib/kernel/main.c include/kernel/main.h
+##############     bootloader代码编译     ###############
+$(BUILD_DIR)/loader.bin: boot/loader.S 
+	$(AS) $(ASBINLIB) $< -o $@
+
+##############     c代码编译     ###############
+$(BUILD_DIR)/main.o: kernel/main.c lib/kernel/print.h \
+	lib/stdint.h kernel/init.h thread/thread.h 
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/init.o: lib/kernel/init.c include/kernel/init.h
+$(BUILD_DIR)/init.o: kernel/init.c kernel/init.h lib/kernel/print.h \
+	lib/stdint.h kernel/interrupt.h device/timer.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/interrupt.o: lib/kernel/interrupt.c include/kernel/interrupt.h
+$(BUILD_DIR)/interrupt.o: kernel/interrupt.c kernel/interrupt.h \
+	lib/stdint.h kernel/global.h lib/kernel/io.h lib/kernel/print.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/timer.o: lib/device/timer.c include/device/timer.h
+$(BUILD_DIR)/timer.o: device/timer.c device/timer.h lib/stdint.h\
+	lib/kernel/io.h lib/kernel/print.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/debug.o: lib/kernel/debug.c include/kernel/debug.h
+$(BUILD_DIR)/debug.o: kernel/debug.c kernel/debug.h \
+	lib/kernel/print.h lib/stdint.h kernel/interrupt.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/memory.o: lib/kernel/memory.c include/kernel/memory.h
+$(BUILD_DIR)/string.o: lib/string.c lib/string.h \
+	lib/stdint.h  kernel/debug.h  lib/string.h kernel/global.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/bitmap.o: lib/kernel/bitmap.c include/kernel/bitmap.h
+$(BUILD_DIR)/bitmap.o: lib/kernel/bitmap.c lib/kernel/bitmap.h \
+	lib/kernel/print.h lib/stdint.h kernel/interrupt.h \
+	kernel/debug.h  lib/string.h kernel/global.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/thread.o: lib/thread/thread.c include/thread/thread.h
+$(BUILD_DIR)/memory.o: kernel/memory.c kernel/memory.h lib/stdint.h lib/kernel/bitmap.h \
+	kernel/global.h kernel/global.h kernel/debug.h lib/kernel/print.h \
+	lib/kernel/io.h kernel/interrupt.h lib/string.h lib/stdint.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/string.o: lib/string/string.c include/string/string.h
+$(BUILD_DIR)/thread.o: thread/thread.c thread/thread.h lib/stdint.h \
+	kernel/global.h lib/kernel/bitmap.h kernel/memory.h lib/string.h \
+	lib/stdint.h lib/kernel/print.h kernel/interrupt.h kernel/debug.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/list.o: lib/kernel/list.c include/kernel/list.h
+$(BUILD_DIR)/list.o: lib/kernel/list.c lib/kernel/list.h kernel/global.h lib/stdint.h \
+	kernel/interrupt.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/sync.o: lib/thread/sync.c include/thread/sync.h
+$(BUILD_DIR)/console.o: device/console.c device/console.h lib/stdint.h \
+	lib/kernel/print.h thread/sync.h lib/kernel/list.h kernel/global.h \
+	thread/thread.h thread/thread.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/console.o: lib/device/console.c include/device/console.h
+$(BUILD_DIR)/sync.o: thread/sync.c thread/sync.h lib/kernel/list.h kernel/global.h \
+	lib/stdint.h thread/thread.h lib/string.h lib/stdint.h kernel/debug.h \
+	kernel/interrupt.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/keyboard.o: lib/device/keyboard.c include/device/keyboard.h
+$(BUILD_DIR)/keyboard.o: device/keyboard.c device/keyboard.h lib/kernel/print.h \
+	lib/stdint.h kernel/interrupt.h lib/kernel/io.h thread/thread.h \
+	lib/kernel/list.h kernel/global.h thread/sync.h thread/thread.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/ioqueue.o: lib/device/ioqueue.c include/device/ioqueue.h
+$(BUILD_DIR)/ioqueue.o: device/ioqueue.c device/ioqueue.h lib/stdint.h thread/thread.h \
+	lib/kernel/list.h kernel/global.h thread/sync.h thread/thread.h kernel/interrupt.h \
+	kernel/debug.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/tss.o: lib/userprog/tss.c include/userprog/tss.h
+$(BUILD_DIR)/tss.o: userprog/tss.c userprog/tss.h thread/thread.h lib/stdint.h \
+	lib/kernel/list.h kernel/global.h lib/string.h lib/stdint.h \
+	lib/kernel/print.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/process.o: lib/userprog/process.c include/userprog/process.h
+$(BUILD_DIR)/process.o: userprog/process.c userprog/process.h thread/thread.h \
+	lib/stdint.h lib/kernel/list.h kernel/global.h kernel/debug.h \
+	kernel/memory.h lib/kernel/bitmap.h userprog/tss.h kernel/interrupt.h \
+	lib/string.h lib/stdint.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/syscall.o: lib/user/syscall.c include/user/syscall.h
+$(BUILD_DIR)/syscall.o: lib/user/syscall.c lib/user/syscall.h lib/stdint.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/syscall-init.o: lib/userprog/syscall-init.c include/userprog/syscall-init.h
+$(BUILD_DIR)/syscall-init.o: userprog/syscall-init.c userprog/syscall-init.h \
+	lib/stdint.h lib/user/syscall.h lib/kernel/print.h thread/thread.h \
+	lib/kernel/list.h kernel/global.h lib/kernel/bitmap.h kernel/memory.h
 	$(CC) $(CFLAGS) $< -o $@
 
-
-# 汇编代码编译
-$(BUILD_DIR)/kernel.o: lib/kernel/kernel.S
+##############    汇编代码编译    ###############
+$(BUILD_DIR)/kernel.o: kernel/kernel.S
 	$(AS) $(ASFLAGS) $< -o $@
 
 $(BUILD_DIR)/print.o: lib/kernel/print.S
 	$(AS) $(ASFLAGS) $< -o $@
 
-$(BIN_DIR)/mbr.bin: lib/mbr.S
-	$(AS) $< -o $@
-
-$(BIN_DIR)/loader.bin: lib/loader.S
-	$(AS) $< -o $@
-
-$(BUILD_DIR)/switch.o: lib/thread/switch.S
+$(BUILD_DIR)/switch.o: thread/switch.S
 	$(AS) $(ASFLAGS) $< -o $@
 
+##############    链接所有目标文件    #############
+$(BUILD_DIR)/kernel.bin: $(OBJS)
+	$(LD) $(LDFLAGS) $^ -o $@
 
-# 链接所有目标文件
-$(BIN_DIR)/kernel.bin: $(OBJS)
-	$(LD) $(LDFLASG) $^ -o $@
+.PHONY : mk_dir hd clean all
 
-.PHONY: mk_dir hd clean all run
+mk_dir:
+	if [ ! -d $(BUILD_DIR) ];then mkdir $(BUILD_DIR);fi
 
-mk_dir: 
-	if [ ! -d $(BUILD_DIR) ]; then mkdir $(BUILD_DIR); fi
-	if [ ! -d $(BIN_DIR) ]; then mkdir $(BIN_DIR); fi
+mk_img:
+	if [ ! -e $(DISK_IMG) ];then /usr/bin/bximage -hd -mode="flat" -size=3 -q $(DISK_IMG);fi
 
 hd:
-	dd if=$(BIN_DIR)/mbr.bin of=../bochs/hd60M.img bs=512 count=0 conv=notrunc
-	dd if=$(BIN_DIR)/loader.bin of=../bochs/hd60M.img bs=512 count=5 seek=2 conv=notrunc
-	dd if=$(BIN_DIR)/kernel.bin of=../bochs/hd60M.img bs=512 count=200 seek=9 conv=notrunc
+	dd if=$(BUILD_DIR)/mbr.bin of=hd3M.img bs=512 count=1  conv=notrunc
+	dd if=$(BUILD_DIR)/loader.bin of=hd3M.img bs=512 count=4 seek=2 conv=notrunc
+	dd if=$(BUILD_DIR)/kernel.bin \
+		of=hd3M.img \
+		bs=512 count=200 seek=9 conv=notrunc
+ctags:
+	ctags -R
 
 clean:
-	rm -f $(BUILD_DIR)/*
-	rm -f $(BIN_DIR)/*
+	cd $(BUILD_DIR) && rm -f ./* && rm ../$(DISK_IMG)
 
-build: $(BIN_DIR)/kernel.bin $(BIN_DIR)/mbr.bin $(BIN_DIR)/loader.bin
+build: $(BUILD_DIR)/kernel.bin $(BUILD_DIR)/mbr.bin $(BUILD_DIR)/loader.bin
 
-run:
-	../bochs/bin/bochs -f ../bochs/bochsrc.disk
-
-all: mk_dir build hd run
-
+all: mk_dir mk_img build hd ctags
