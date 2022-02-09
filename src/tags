@@ -465,6 +465,7 @@ shift_l_make	device/keyboard.c	28;"	d	file:
 shift_r_char	device/keyboard.c	22;"	d	file:
 shift_r_make	device/keyboard.c	29;"	d	file:
 shift_status	device/keyboard.c	/^static bool ctrl_status, shift_status, alt_status, caps_lock_status, ext_scancode;$/;"	v	file:
+sprintf	lib/stdio.c	/^uint32_t sprintf(char* buf, const char* format, ...) {$/;"	f
 ss	thread/thread.h	/^    uint32_t ss;$/;"	m	struct:intr_stack
 ss	userprog/tss.c	/^    uint32_t ss;$/;"	m	struct:tss	file:
 ss0	userprog/tss.c	/^    uint32_t ss0;$/;"	m	struct:tss	file:
