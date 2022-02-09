@@ -1,5 +1,5 @@
 .vscode
-bochs.out
+log.bochsrc.disk
+hd3M.img
 bin/
 build/
-bochs/
