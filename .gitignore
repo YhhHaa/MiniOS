@@ -1,5 +1,5 @@
 .vscode
 log.bochsrc.disk
-hd3M.img
+*.img
 bin/
 build/
