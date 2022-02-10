@@ -108,8 +108,10 @@ SELECTOR_U_STACK	kernel/global.h	44;"	d
 SELECTOR_VIDEO	boot/loader.S	/^   SELECTOR_VIDEO equ (0x0003<<3) + TI_GDT + RPL0	 ; 同上 $/;"	d
 SELECTOR_VIDEO	lib/kernel/print.S	/^SELECTOR_VIDEO equ (0x0003<<3) + TI_GDT + RPL0$/;"	d
 SYSCALL_NR	lib/user/syscall.h	/^enum SYSCALL_NR {$/;"	g
+SYS_FREE	lib/user/syscall.h	/^   SYS_FREE$/;"	e	enum:SYSCALL_NR
 SYS_GETPID	lib/user/syscall.h	/^   SYS_GETPID,$/;"	e	enum:SYSCALL_NR
-SYS_WRITE	lib/user/syscall.h	/^   SYS_WRITE$/;"	e	enum:SYSCALL_NR
+SYS_MALLOC	lib/user/syscall.h	/^   SYS_MALLOC,$/;"	e	enum:SYSCALL_NR
+SYS_WRITE	lib/user/syscall.h	/^   SYS_WRITE,$/;"	e	enum:SYSCALL_NR
 TASK_BLOCKED	thread/thread.h	/^   TASK_BLOCKED,$/;"	e	enum:task_status
 TASK_DIED	thread/thread.h	/^   TASK_DIED$/;"	e	enum:task_status
 TASK_HANGING	thread/thread.h	/^   TASK_HANGING,$/;"	e	enum:task_status
@@ -307,6 +309,7 @@ extern	kernel/kernel.S	/^extern syscall_table$/;"	l
 f	makefile	/^	dd if=$(BUILD_DIR)\/kernel.bin \\$/;"	m
 f	makefile	/^	dd if=$(BUILD_DIR)\/loader.bin of=hd3M.img bs=512 count=4 seek=2 conv=notrunc$/;"	m
 false	kernel/global.h	123;"	d
+free	lib/user/syscall.c	/^void free(void* ptr) {$/;"	f
 free_elem	kernel/memory.h	/^	struct list_elem free_elem;$/;"	m	struct:mem_block	typeref:struct:mem_block::list_elem
 free_list	kernel/memory.h	/^	struct list free_list; \/\/ 目前可用的mem_block链表$/;"	m	struct:mem_block_desc	typeref:struct:mem_block_desc::list
 frequency_set	device/timer.c	/^static void frequency_set(uint8_t counter_port, \\$/;"	f	file:
@@ -410,6 +413,7 @@ main_thread	thread/thread.c	/^struct task_struct* main_thread;    \/\/ 主线程
 make_gdt_desc	userprog/tss.c	/^static struct gdt_desc make_gdt_desc(uint32_t* desc_addr, uint32_t limit, uint8_t attr_low, uint8_t attr_high) {$/;"	f	file:
 make_idt_desc	kernel/interrupt.c	/^static void make_idt_desc(struct gate_desc* p_gdesc, uint8_t attr, intr_handler function) { $/;"	f	file:
 make_main_thread	thread/thread.c	/^static void make_main_thread(void) {$/;"	f	file:
+malloc	lib/user/syscall.c	/^void* malloc(uint32_t size) {$/;"	f
 malloc_page	kernel/memory.c	/^void* malloc_page(enum pool_flags pf, uint32_t pg_cnt) {$/;"	f
 mem_block	kernel/memory.h	/^struct mem_block {$/;"	s
 mem_block_desc	kernel/memory.h	/^struct mem_block_desc {$/;"	s
@@ -507,7 +511,7 @@ sys_write	userprog/syscall-init.c	/^uint32_t sys_write(char* str) {$/;"	f
 syscall	userprog/syscall-init.c	/^typedef void* syscall;$/;"	t	file:
 syscall_handler	kernel/kernel.S	/^syscall_handler:$/;"	l
 syscall_init	userprog/syscall-init.c	/^void syscall_init(void) {$/;"	f
-syscall_nr	userprog/syscall-init.c	9;"	d	file:
+syscall_nr	userprog/syscall-init.c	10;"	d	file:
 syscall_table	userprog/syscall-init.c	/^syscall syscall_table[syscall_nr];$/;"	v
 tab	device/keyboard.c	13;"	d	file:
 tail	device/ioqueue.h	/^    int32_t tail;			    \/\/ 队尾,数据从队尾处读出$/;"	m	struct:ioqueue
@@ -534,6 +538,8 @@ tss	userprog/tss.c	/^static struct tss tss;$/;"	v	typeref:struct:tss	file:
 tss	userprog/tss.c	/^struct tss {$/;"	s	file:
 tss_init	userprog/tss.c	/^void tss_init() {$/;"	f
 u_block_desc	thread/thread.h	/^   struct mem_block_desc u_block_desc[DESC_CNT]; \/\/ 用户进程的内存块描述符$/;"	m	struct:task_struct	typeref:struct:task_struct::mem_block_desc
+u_prog_a	kernel/main.c	/^void u_prog_a(void) {$/;"	f
+u_prog_b	kernel/main.c	/^void u_prog_b(void) {$/;"	f
 uint16_t	lib/stdint.h	/^typedef unsigned short int uint16_t;$/;"	t
 uint32_t	lib/stdint.h	/^typedef unsigned int uint32_t;$/;"	t
 uint64_t	lib/stdint.h	/^typedef unsigned long long int uint64_t;$/;"	t
