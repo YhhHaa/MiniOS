@@ -51,4 +51,6 @@ void* get_a_page(enum pool_flags pf, uint32_t vaddr);
 void* get_user_pages(uint32_t pg_cnt);
 void block_desc_init(struct mem_block_desc* desc_array);
 void* sys_malloc(uint32_t size);
+void pfree(uint32_t pg_phy_addr);
+void mfree_page(enum pool_flags pf, void* _vaddr, uint32_t pg_cnt);
 #endif
