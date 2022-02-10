@@ -419,6 +419,7 @@ mem_pool_init	kernel/memory.c	/^static void mem_pool_init(uint32_t all_mem) {$/;
 memcmp	lib/string.c	/^int memcmp(const void* a_, const void* b_, uint32_t size) {$/;"	f
 memcpy	lib/string.c	/^void memcpy(void* dst_, const void* src_, uint32_t size) {$/;"	f
 memset	lib/string.c	/^void memset(void* dst_, uint8_t value, uint32_t size) {$/;"	f
+mfree_page	kernel/memory.c	/^void mfree_page(enum pool_flags pf, void* _vaddr, uint32_t pg_cnt) {$/;"	f
 mul	boot/loader.S	/^      mul dx$/;"	d
 mul	boot/mbr.S	/^      mul dx$/;"	d
 name	thread/thread.h	/^   char name[16];$/;"	m	struct:task_struct
@@ -430,9 +431,11 @@ outsw	lib/kernel/io.h	/^static inline void outsw(uint16_t port, const void* addr
 p_mode_start	boot/loader.S	/^p_mode_start:$/;"	l
 page_dir_activate	userprog/process.c	/^void page_dir_activate(struct task_struct* p_thread) {$/;"	f
 page_table_add	kernel/memory.c	/^static void page_table_add(void* _vaddr, void* _page_phyaddr) {$/;"	f	file:
+page_table_pte_remove	kernel/memory.c	/^static void page_table_pte_remove(uint32_t vaddr) {$/;"	f	file:
 palloc	kernel/memory.c	/^static void* palloc(struct pool* m_pool) {$/;"	f	file:
 panic_spin	kernel/debug.c	/^void panic_spin(char* filename,	       \\$/;"	f
 pde_ptr	kernel/memory.c	/^uint32_t* pde_ptr(uint32_t vaddr) {$/;"	f
+pfree	kernel/memory.c	/^void pfree(uint32_t pg_phy_addr) {$/;"	f
 pgdir	thread/thread.h	/^   uint32_t* pgdir;              \/\/ 进程自己页表的虚拟地址$/;"	m	struct:task_struct
 phy_addr_start	kernel/memory.c	/^   uint32_t phy_addr_start;	 \/\/ 本内存池所管理物理内存的起始地址$/;"	m	struct:pool	file:
 pic_init	kernel/interrupt.c	/^static void pic_init(void) {$/;"	f	file:
@@ -497,6 +500,7 @@ strcpy	lib/string.c	/^char* strcpy(char* dst_, const char* src_) {$/;"	f
 strlen	lib/string.c	/^uint32_t strlen(const char* str) {$/;"	f
 strrchr	lib/string.c	/^char* strrchr(const char* str, const uint8_t ch) {$/;"	f
 switch_to	thread/switch.S	/^switch_to:$/;"	l
+sys_free	kernel/memory.c	/^void sys_free(void* ptr) {$/;"	f
 sys_getpid	userprog/syscall-init.c	/^uint32_t sys_getpid(void) {$/;"	f
 sys_malloc	kernel/memory.c	/^void* sys_malloc(uint32_t size) {$/;"	f
 sys_write	userprog/syscall-init.c	/^uint32_t sys_write(char* str) {$/;"	f
@@ -544,6 +548,7 @@ va_list	lib/stdio.h	/^typedef char* va_list;$/;"	t
 va_start	lib/stdio.c	8;"	d	file:
 vaddr_bitmap	kernel/memory.h	/^   struct bitmap vaddr_bitmap;$/;"	m	struct:virtual_addr	typeref:struct:virtual_addr::bitmap
 vaddr_get	kernel/memory.c	/^static void* vaddr_get(enum pool_flags pf, uint32_t pg_cnt) {$/;"	f	file:
+vaddr_remove	kernel/memory.c	/^static void vaddr_remove(enum pool_flags pf, void* _vaddr, uint32_t pg_cnt) {$/;"	f	file:
 vaddr_start	kernel/memory.h	/^   uint32_t vaddr_start;$/;"	m	struct:virtual_addr
 value	thread/sync.h	/^   uint8_t  value;$/;"	m	struct:semaphore
 vec_no	thread/thread.h	/^    uint32_t vec_no;	 \/\/ kernel.S 宏VECTOR中push %1压入的中断号$/;"	m	struct:intr_stack

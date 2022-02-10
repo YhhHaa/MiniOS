@@ -509,3 +509,47 @@ void mfree_page(enum pool_flags pf, void* _vaddr, uint32_t pg_cnt) {
 		vaddr_remove(pf, _vaddr, pg_cnt);
 	}
 }
+
+/* 回收内存ptr */
+void sys_free(void* ptr) {
+	ASSERT(ptr != NULL);
+	if (ptr != NULL) {
+		enum pool_flags PF;
+		struct pool* mem_pool;
+
+		// 判断是线程, 还是进程
+		if (running_thread()->pgdir == NULL) {
+			ASSERT((uint32_t)ptr >= K_HEAP_START);
+			PF = PF_KERNEL;
+			mem_pool = &kernel_pool;
+		} else {
+			PF = PF_USER;
+			mem_pool = &user_pool;
+		}
+
+		// 将mem_block转换成arena获取元信息
+		lock_acquire(&mem_pool->lock);
+		struct mem_block* b = ptr;
+		struct arena* a = block2arena(b);
+		ASSERT(a->large == 0 || a->large == 1);
+
+		if (a->desc == NULL && a->large == true) { // 大于1024的内存块
+			mfree_page(PF, a, a->cnt);
+		} else {
+			// 先将内存块回收到free_list
+			list_append(&a->desc->free_list, &b->free_elem);
+
+			// 再判断此arena中的内存块是否都是空闲, 如果是就释放arena
+			if (++a->cnt == a->desc->block_per_arena) {
+				uint32_t block_idx;
+				for (block_idx = 0; block_idx < a->desc->block_per_arena; block_idx++) {
+					struct mem_block* b = arena2block(a, block_idx);
+					ASSERT(elem_find(&a->desc->free_list, &b->free_elem));
+					list_remove(&b->free_elem);
+				}
+				mfree_page(PF, a, 1);
+			}
+		}
+		lock_release(&mem_pool->lock);
+	}
+}
