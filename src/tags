@@ -10,18 +10,18 @@ ASFLAGS	makefile	/^ASFLAGS = -f elf $/;"	m
 ASSERT	kernel/debug.h	13;"	d
 ASSERT	kernel/debug.h	15;"	d
 BITMAP_MASK	lib/kernel/bitmap.h	4;"	d
-BIT_DEV_DEV	device/ide.c	31;"	d	file:
-BIT_DEV_LBA	device/ide.c	30;"	d	file:
-BIT_DEV_MBS	device/ide.c	29;"	d	file:
-BIT_STAT_BSY	device/ide.c	24;"	d	file:
-BIT_STAT_DRDY	device/ide.c	25;"	d	file:
-BIT_STAT_DRQ	device/ide.c	26;"	d	file:
+BIT_DEV_DEV	device/ide.c	33;"	d	file:
+BIT_DEV_LBA	device/ide.c	32;"	d	file:
+BIT_DEV_MBS	device/ide.c	31;"	d	file:
+BIT_STAT_BSY	device/ide.c	26;"	d	file:
+BIT_STAT_DRDY	device/ide.c	27;"	d	file:
+BIT_STAT_DRQ	device/ide.c	28;"	d	file:
 BUILD_DIR	makefile	/^BUILD_DIR = .\/build$/;"	m
 CC	makefile	/^CC = gcc$/;"	m
 CFLAGS	makefile	/^CFLAGS = -m32 -Wall $(LIB) -c -fno-builtin -W -Wstrict-prototypes \\$/;"	m
-CMD_IDENTIFY	device/ide.c	34;"	d	file:
-CMD_READ_SECTOR	device/ide.c	35;"	d	file:
-CMD_WRITE_SECTOR	device/ide.c	36;"	d	file:
+CMD_IDENTIFY	device/ide.c	36;"	d	file:
+CMD_READ_SECTOR	device/ide.c	37;"	d	file:
+CMD_WRITE_SECTOR	device/ide.c	38;"	d	file:
 CODE_DESC	boot/loader.S	/^   CODE_DESC:  dd    0x0000FFFF $/;"	d
 CONTRER0_PORT	device/timer.c	11;"	d	file:
 COUNTER0_NO	device/timer.c	12;"	d	file:
@@ -246,12 +246,14 @@ bool	kernel/global.h	121;"	d
 btmp_bytes_len	lib/kernel/bitmap.h	/^   uint32_t btmp_bytes_len;$/;"	m	struct:bitmap
 buf	device/ioqueue.h	/^    char buf[bufsize];			    \/\/ 缓冲区大小$/;"	m	struct:ioqueue
 bufsize	device/ioqueue.h	7;"	d
+busy_wait	device/ide.c	/^static bool busy_wait(struct disk* hd) {$/;"	f	file:
 caps_lock_char	device/keyboard.c	25;"	d	file:
 caps_lock_make	device/keyboard.c	36;"	d	file:
 caps_lock_status	device/keyboard.c	/^static bool ctrl_status, shift_status, alt_status, caps_lock_status, ext_scancode;$/;"	v	file:
 channel_cnt	device/ide.c	/^uint8_t channel_cnt; \/\/ 按硬盘数计算的通道数$/;"	v
 channels	device/ide.c	/^struct ide_channel channels[2]; \/\/ 有两个ide通道$/;"	v	typeref:struct:ide_channel
 char_invisible	device/keyboard.c	18;"	d	file:
+cmd_out	device/ide.c	/^static void cmd_out(struct ide_channel* channel, uint8_t cmd) {$/;"	f	file:
 cnt	kernel/memory.c	/^	uint32_t cnt;$/;"	m	struct:arena	file:
 console_acquire	device/console.c	/^void console_acquire() {$/;"	f
 console_init	device/console.c	/^void console_init() {$/;"	f
@@ -364,6 +366,8 @@ holder	thread/sync.h	/^   struct   task_struct* holder;	    \/\/ 锁的持有者
 holder_repeat_nr	thread/sync.h	/^   uint32_t holder_repeat_nr;		    \/\/ 锁的持有者重复申请锁的次数$/;"	m	struct:lock
 ide_channel	device/ide.h	/^struct ide_channel {$/;"	s
 ide_init	device/ide.c	/^void ide_init(void) {$/;"	f
+ide_read	device/ide.c	/^void ide_read(struct disk* hd, uint32_t lba, void* buf, uint32_t sec_cnt) {$/;"	f
+ide_write	device/ide.c	/^void ide_write(struct disk* hd, uint32_t lba, void* buf, uint32_t sec_cnt) {$/;"	f
 idle	thread/thread.c	/^static void idle(void* arg) {$/;"	f	file:
 idle_thread	thread/thread.c	/^struct task_struct* idle_thread; \/\/ idle线程$/;"	v	typeref:struct:task_struct
 idt	kernel/interrupt.c	/^static struct gate_desc idt[IDT_DESC_CNT];   \/\/ idt是中断描述符表,本质上就是个中断门描述符数组$/;"	v	typeref:struct:gate_desc	file:
@@ -385,6 +389,7 @@ intr_entry_table	kernel/kernel.S	/^intr_entry_table:$/;"	l
 intr_exit	kernel/kernel.S	/^intr_exit:	     $/;"	l
 intr_get_status	kernel/interrupt.c	/^enum intr_status intr_get_status() {$/;"	f
 intr_handler	kernel/interrupt.h	/^typedef void* intr_handler;$/;"	t
+intr_hd_handler	device/ide.c	/^void intr_hd_handler(uint8_t irq_no) {$/;"	f
 intr_keyboard_handler	device/keyboard.c	/^static void intr_keyboard_handler(void) {$/;"	f	file:
 intr_name	kernel/interrupt.c	/^char* intr_name[IDT_DESC_CNT];		     \/\/ 用于保存异常的名字$/;"	v
 intr_set_status	kernel/interrupt.c	/^enum intr_status intr_set_status(enum intr_status status) {$/;"	f
@@ -442,7 +447,7 @@ make_idt_desc	kernel/interrupt.c	/^static void make_idt_desc(struct gate_desc* p
 make_main_thread	thread/thread.c	/^static void make_main_thread(void) {$/;"	f	file:
 malloc	lib/user/syscall.c	/^void* malloc(uint32_t size) {$/;"	f
 malloc_page	kernel/memory.c	/^void* malloc_page(enum pool_flags pf, uint32_t pg_cnt) {$/;"	f
-max_lba	device/ide.c	39;"	d	file:
+max_lba	device/ide.c	41;"	d	file:
 mem_block	kernel/memory.h	/^struct mem_block {$/;"	s
 mem_block_desc	kernel/memory.h	/^struct mem_block_desc {$/;"	s
 mem_cpy	boot/loader.S	/^mem_cpy:		      $/;"	l
@@ -506,17 +511,18 @@ put_int_buffer	lib/kernel/print.S	/^put_int_buffer    dq    0     ; 定义8字�
 put_str	lib/kernel/print.S	/^put_str:$/;"	l
 rd_disk_m_16	boot/mbr.S	/^rd_disk_m_16:	   $/;"	l
 rd_disk_m_32	boot/loader.S	/^rd_disk_m_32:	   $/;"	l
-reg_alt_status	device/ide.c	20;"	d	file:
-reg_cmd	device/ide.c	19;"	d	file:
-reg_ctl	device/ide.c	21;"	d	file:
-reg_data	device/ide.c	11;"	d	file:
-reg_dev	device/ide.c	17;"	d	file:
-reg_error	device/ide.c	12;"	d	file:
-reg_lba_h	device/ide.c	16;"	d	file:
-reg_lba_l	device/ide.c	14;"	d	file:
-reg_lba_m	device/ide.c	15;"	d	file:
-reg_sect_cnt	device/ide.c	13;"	d	file:
-reg_status	device/ide.c	18;"	d	file:
+read_from_sector	device/ide.c	/^static void read_from_sector(struct disk* hd, void* buf, uint8_t sec_cnt) {$/;"	f	file:
+reg_alt_status	device/ide.c	22;"	d	file:
+reg_cmd	device/ide.c	21;"	d	file:
+reg_ctl	device/ide.c	23;"	d	file:
+reg_data	device/ide.c	13;"	d	file:
+reg_dev	device/ide.c	19;"	d	file:
+reg_error	device/ide.c	14;"	d	file:
+reg_lba_h	device/ide.c	18;"	d	file:
+reg_lba_l	device/ide.c	16;"	d	file:
+reg_lba_m	device/ide.c	17;"	d	file:
+reg_sect_cnt	device/ide.c	15;"	d	file:
+reg_status	device/ide.c	20;"	d	file:
 register_handler	kernel/interrupt.c	/^void register_handler(uint8_t vector_no, intr_handler function) {$/;"	f
 running_thread	thread/thread.c	/^struct task_struct* running_thread() {$/;"	f
 sb	device/ide.h	/^	struct super_block* sb; \/\/ 本分区的超级块$/;"	m	struct:partition	typeref:struct:partition::super_block
@@ -527,6 +533,8 @@ section	kernel/kernel.S	/^section .text$/;"	l
 section	lib/kernel/print.S	/^section .data$/;"	l
 section	lib/kernel/print.S	/^section .text$/;"	l
 section	thread/switch.S	/^section .text$/;"	l
+select_disk	device/ide.c	/^static void select_disk(struct disk* hd) {$/;"	f	file:
+select_sector	device/ide.c	/^static void select_sector(struct disk* hd, uint32_t lba, uint8_t sec_cnt) {$/;"	f	file:
 selector	kernel/interrupt.c	/^   uint16_t    selector;$/;"	m	struct:gate_desc	file:
 self_kstack	thread/thread.h	/^   uint32_t* self_kstack;	 \/\/ 各内核线程都用自己的内核栈$/;"	m	struct:task_struct
 sema_down	thread/sync.c	/^void sema_down(struct semaphore* psema) {$/;"	f
@@ -622,3 +630,4 @@ vsprintf	lib/stdio.c	/^uint32_t vsprintf(char* str, const char* format, va_list 
 waiters	thread/sync.h	/^   struct   list waiters;$/;"	m	struct:semaphore	typeref:struct:semaphore::list
 wakeup	device/ioqueue.c	/^static void wakeup(struct task_struct** waiter) {$/;"	f	file:
 write	lib/user/syscall.c	/^uint32_t write(char* str) {$/;"	f
+write2sector	device/ide.c	/^static void write2sector(struct disk* hd, void* buf, uint8_t sec_cnt) {$/;"	f	file:
