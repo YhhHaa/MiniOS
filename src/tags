@@ -10,9 +10,18 @@ ASFLAGS	makefile	/^ASFLAGS = -f elf $/;"	m
 ASSERT	kernel/debug.h	13;"	d
 ASSERT	kernel/debug.h	15;"	d
 BITMAP_MASK	lib/kernel/bitmap.h	4;"	d
+BIT_DEV_DEV	device/ide.c	31;"	d	file:
+BIT_DEV_LBA	device/ide.c	30;"	d	file:
+BIT_DEV_MBS	device/ide.c	29;"	d	file:
+BIT_STAT_BSY	device/ide.c	24;"	d	file:
+BIT_STAT_DRDY	device/ide.c	25;"	d	file:
+BIT_STAT_DRQ	device/ide.c	26;"	d	file:
 BUILD_DIR	makefile	/^BUILD_DIR = .\/build$/;"	m
 CC	makefile	/^CC = gcc$/;"	m
 CFLAGS	makefile	/^CFLAGS = -m32 -Wall $(LIB) -c -fno-builtin -W -Wstrict-prototypes \\$/;"	m
+CMD_IDENTIFY	device/ide.c	34;"	d	file:
+CMD_READ_SECTOR	device/ide.c	35;"	d	file:
+CMD_WRITE_SECTOR	device/ide.c	36;"	d	file:
 CODE_DESC	boot/loader.S	/^   CODE_DESC:  dd    0x0000FFFF $/;"	d
 CONTRER0_PORT	device/timer.c	11;"	d	file:
 COUNTER0_NO	device/timer.c	12;"	d	file:
@@ -176,6 +185,7 @@ VECTOR	kernel/kernel.S	/^VECTOR 0x2e,ZERO	;硬盘$/;"	l
 VECTOR	kernel/kernel.S	/^VECTOR 0x2f,ZERO	;保留$/;"	l
 VIDEO_DESC	boot/loader.S	/^   VIDEO_DESC: dd    0x80000007	       ; limit=(0xbffff-0xb8000)\/4k=0x7$/;"	d
 __DEVICE_CONSOLE_H	device/console.h	2;"	d
+__DEVICE_IDE_H	device/ide.h	2;"	d
 __DEVICE_IOQUEUE_H	device/ioqueue.h	2;"	d
 __DEVICE_KEYBOARD_H	device/keyboard.h	2;"	d
 __DEVICE_TIME_H	device/timer.h	2;"	d
@@ -188,6 +198,7 @@ __LIB_IO_H	lib/kernel/io.h	12;"	d
 __LIB_KERNEL_BITMAP_H	lib/kernel/bitmap.h	2;"	d
 __LIB_KERNEL_LIST_H	lib/kernel/list.h	2;"	d
 __LIB_KERNEL_PRINT_H	lib/kernel/print.h	2;"	d
+__LIB_KERNEL_STDIOSYS_H	lib/kernel/stdio-kernel.h	2;"	d
 __LIB_STDINT_H	lib/stdint.h	2;"	d
 __LIB_STDIO_H	lib/stdio.h	2;"	d
 __LIB_STRING_H	lib/string.h	2;"	d
@@ -227,6 +238,7 @@ bitmap_scan_test	lib/kernel/bitmap.c	/^bool bitmap_scan_test(struct bitmap* btmp
 bitmap_set	lib/kernel/bitmap.c	/^void bitmap_set(struct bitmap* btmp, uint32_t bit_idx, int8_t value) {$/;"	f
 bits	lib/kernel/bitmap.h	/^   uint8_t* bits;$/;"	m	struct:bitmap
 block2arena	kernel/memory.c	/^static struct arena* block2arena(struct mem_block* b) {$/;"	f	file:
+block_bitmap	device/ide.h	/^	struct bitmap block_bitmap; \/\/ 块位图$/;"	m	struct:partition	typeref:struct:partition::bitmap
 block_desc_init	kernel/memory.c	/^void block_desc_init(struct mem_block_desc* desc_array) {$/;"	f
 block_per_arena	kernel/memory.h	/^	uint32_t block_per_arena; \/\/ 本arena中可容纳此mem_block的数量$/;"	m	struct:mem_block_desc
 block_size	kernel/memory.h	/^	uint32_t block_size; \/\/ 内存块大小$/;"	m	struct:mem_block_desc
@@ -237,6 +249,8 @@ bufsize	device/ioqueue.h	7;"	d
 caps_lock_char	device/keyboard.c	25;"	d	file:
 caps_lock_make	device/keyboard.c	36;"	d	file:
 caps_lock_status	device/keyboard.c	/^static bool ctrl_status, shift_status, alt_status, caps_lock_status, ext_scancode;$/;"	v	file:
+channel_cnt	device/ide.c	/^uint8_t channel_cnt; \/\/ 按硬盘数计算的通道数$/;"	v
+channels	device/ide.c	/^struct ide_channel channels[2]; \/\/ 有两个ide通道$/;"	v	typeref:struct:ide_channel
 char_invisible	device/keyboard.c	18;"	d	file:
 cnt	kernel/memory.c	/^	uint32_t cnt;$/;"	m	struct:arena	file:
 console_acquire	device/console.c	/^void console_acquire() {$/;"	f
@@ -262,6 +276,10 @@ dcount	kernel/interrupt.c	/^   uint8_t     dcount;   \/\/此项为双字计数�
 default_prio	userprog/process.h	5;"	d
 delete	device/keyboard.c	15;"	d	file:
 desc	kernel/memory.c	/^	struct mem_block_desc* desc; \/\/ 此arena关联的mem_block_desc$/;"	m	struct:arena	typeref:struct:arena::mem_block_desc	file:
+dev_no	device/ide.h	/^	uint8_t dev_no; \/\/ 本硬盘是主0还是从1$/;"	m	struct:disk
+devices	device/ide.h	/^	struct disk devices[2]; \/\/ 一个通道上连接两个硬盘, 一主一丛$/;"	m	struct:ide_channel	typeref:struct:ide_channel::disk
+disk	device/ide.h	/^struct disk {$/;"	s
+disk_done	device/ide.h	/^	struct semaphore disk_done; \/\/ 发送完中断, 用于阻塞, 唤醒自身, 防止浪费CPU$/;"	m	struct:ide_channel	typeref:struct:ide_channel::semaphore
 ds	thread/thread.h	/^    uint32_t ds;$/;"	m	struct:intr_stack
 ds	userprog/tss.c	/^    uint32_t ds;$/;"	m	struct:tss	file:
 eax	thread/thread.h	/^    uint32_t eax;$/;"	m	struct:intr_stack
@@ -303,6 +321,7 @@ esp1	userprog/tss.c	/^    uint32_t* esp1;$/;"	m	struct:tss	file:
 esp2	userprog/tss.c	/^    uint32_t* esp2;$/;"	m	struct:tss	file:
 esp_dummy	thread/thread.h	/^    uint32_t esp_dummy;	 \/\/ 虽然pushad把esp也压入,但esp是不断变化的,所以会被popad忽略$/;"	m	struct:intr_stack
 exception_init	kernel/interrupt.c	/^static void exception_init(void) {			    \/\/ 完成一般中断处理函数注册及异常名称注册$/;"	f	file:
+expecting_intr	device/ide.h	/^	bool expecting_intr; \/\/ 表示本通道正在等待硬盘中断$/;"	m	struct:ide_channel
 ext_scancode	device/keyboard.c	/^static bool ctrl_status, shift_status, alt_status, caps_lock_status, ext_scancode;$/;"	v	file:
 extern	kernel/kernel.S	/^extern idt_table		 ;idt_table是C中注册的中断处理程序数组$/;"	l
 extern	kernel/kernel.S	/^extern syscall_table$/;"	l
@@ -343,6 +362,8 @@ head	device/ioqueue.h	/^    int32_t head;			    \/\/ 队首,数据往队首处�
 head	lib/kernel/list.h	/^   struct list_elem head;$/;"	m	struct:list	typeref:struct:list::list_elem
 holder	thread/sync.h	/^   struct   task_struct* holder;	    \/\/ 锁的持有者$/;"	m	struct:lock	typeref:struct:lock::task_struct
 holder_repeat_nr	thread/sync.h	/^   uint32_t holder_repeat_nr;		    \/\/ 锁的持有者重复申请锁的次数$/;"	m	struct:lock
+ide_channel	device/ide.h	/^struct ide_channel {$/;"	s
+ide_init	device/ide.c	/^void ide_init() {$/;"	f
 idt	kernel/interrupt.c	/^static struct gate_desc idt[IDT_DESC_CNT];   \/\/ idt是中断描述符表,本质上就是个中断门描述符数组$/;"	v	typeref:struct:gate_desc	file:
 idt_desc_init	kernel/interrupt.c	/^static void idt_desc_init(void) {$/;"	f	file:
 idt_init	kernel/interrupt.c	/^void idt_init() {$/;"	f
@@ -350,6 +371,7 @@ idt_table	kernel/interrupt.c	/^intr_handler idt_table[IDT_DESC_CNT];$/;"	v
 inb	lib/kernel/io.h	/^static inline uint8_t inb(uint16_t port) {$/;"	f
 init_all	kernel/init.c	/^void init_all() {$/;"	f
 init_thread	thread/thread.c	/^void init_thread(struct task_struct* pthread, char* name, int prio) {$/;"	f
+inode_bitmap	device/ide.h	/^	struct bitmap inode_bitmap; \/\/ i结点位图$/;"	m	struct:partition	typeref:struct:partition::bitmap
 insw	lib/kernel/io.h	/^static inline void insw(uint16_t port, void* addr, uint32_t word_cnt) {$/;"	f
 int16_t	lib/stdint.h	/^typedef signed short int int16_t;$/;"	t
 int32_t	lib/stdint.h	/^typedef signed int int32_t;$/;"	t
@@ -375,6 +397,7 @@ ioq_putchar	device/ioqueue.c	/^void ioq_putchar(struct ioqueue* ioq, char byte) 
 ioq_wait	device/ioqueue.c	/^static void ioq_wait(struct task_struct** waiter) {$/;"	f	file:
 ioqueue	device/ioqueue.h	/^struct ioqueue {$/;"	s
 ioqueue_init	device/ioqueue.c	/^void ioqueue_init(struct ioqueue* ioq) {$/;"	f
+irq_no	device/ide.h	/^	uint8_t irq_no; \/\/ 本通道所用的中断号, 根据中断号判断是哪个通道$/;"	m	struct:ide_channel
 itoa	lib/stdio.c	/^static void itoa(uint32_t value, char** buf_ptr_addr, uint8_t base) {$/;"	f	file:
 k_block_desc	kernel/memory.c	/^struct mem_block_desc k_block_desc[DESC_CNT]; \/\/ 定义7个内核内存块描述符$/;"	v	typeref:struct:mem_block_desc
 k_thread_a	kernel/main.c	/^void k_thread_a(void* arg) {     $/;"	f
@@ -402,12 +425,14 @@ list_push	lib/kernel/list.c	/^void list_push(struct list* plist, struct list_ele
 list_remove	lib/kernel/list.c	/^void list_remove(struct list_elem* pelem) {$/;"	f
 list_traversal	lib/kernel/list.c	/^struct list_elem* list_traversal(struct list* plist, function func, int arg) {$/;"	f
 loader_start	boot/loader.S	/^   loader_start:$/;"	l
+lock	device/ide.h	/^	struct lock lock; \/\/ 通道锁, 用来发送中断时只允许一个通道发送, 防止混淆$/;"	m	struct:ide_channel	typeref:struct:ide_channel::lock
 lock	device/ioqueue.h	/^    struct lock lock;$/;"	m	struct:ioqueue	typeref:struct:ioqueue::lock
 lock	kernel/memory.c	/^   struct lock lock;		 \/\/ 申请内存时互斥$/;"	m	struct:pool	typeref:struct:pool::lock	file:
 lock	thread/sync.h	/^struct lock {$/;"	s
 lock_acquire	thread/sync.c	/^void lock_acquire(struct lock* plock) {$/;"	f
 lock_init	thread/sync.c	/^void lock_init(struct lock* plock) {$/;"	f
 lock_release	thread/sync.c	/^void lock_release(struct lock* plock) {$/;"	f
+logic_parts	device/ide.h	/^	struct partition logic_parts[8]; \/\/ 逻辑分区支持8个$/;"	m	struct:disk	typeref:struct:disk::partition
 main	kernel/main.c	/^int main(void) {$/;"	f
 main_thread	thread/thread.c	/^struct task_struct* main_thread;    \/\/ 主线程PCB$/;"	v	typeref:struct:task_struct
 make_gdt_desc	userprog/tss.c	/^static struct gdt_desc make_gdt_desc(uint32_t* desc_addr, uint32_t limit, uint8_t attr_low, uint8_t attr_high) {$/;"	f	file:
@@ -415,6 +440,7 @@ make_idt_desc	kernel/interrupt.c	/^static void make_idt_desc(struct gate_desc* p
 make_main_thread	thread/thread.c	/^static void make_main_thread(void) {$/;"	f	file:
 malloc	lib/user/syscall.c	/^void* malloc(uint32_t size) {$/;"	f
 malloc_page	kernel/memory.c	/^void* malloc_page(enum pool_flags pf, uint32_t pg_cnt) {$/;"	f
+max_lba	device/ide.c	39;"	d	file:
 mem_block	kernel/memory.h	/^struct mem_block {$/;"	s
 mem_block_desc	kernel/memory.h	/^struct mem_block_desc {$/;"	s
 mem_cpy	boot/loader.S	/^mem_cpy:		      $/;"	l
@@ -426,10 +452,16 @@ memset	lib/string.c	/^void memset(void* dst_, uint8_t value, uint32_t size) {$/;
 mfree_page	kernel/memory.c	/^void mfree_page(enum pool_flags pf, void* _vaddr, uint32_t pg_cnt) {$/;"	f
 mul	boot/loader.S	/^      mul dx$/;"	d
 mul	boot/mbr.S	/^      mul dx$/;"	d
+my_channel	device/ide.h	/^	struct ide_channel* my_channel; \/\/ 此块硬盘归属于哪个ide通道$/;"	m	struct:disk	typeref:struct:disk::ide_channel
+my_disk	device/ide.h	/^	struct disk* my_disk; \/\/ 分区所属的硬盘$/;"	m	struct:partition	typeref:struct:partition::disk
+name	device/ide.h	/^	char name[8]; \/\/ 分区名称, 如sd1, sda2$/;"	m	struct:partition
+name	device/ide.h	/^	char name[8]; \/\/ 本ata通道名称, 如ata0, ide0$/;"	m	struct:ide_channel
+name	device/ide.h	/^	char name[8]; \/\/ 本硬盘的名称, 如sda, sdb$/;"	m	struct:disk
 name	thread/thread.h	/^   char name[16];$/;"	m	struct:task_struct
 next	lib/kernel/list.h	/^   struct list_elem* next; \/\/ 后继结点$/;"	m	struct:list_elem	typeref:struct:list_elem::list_elem
 next_pos	device/ioqueue.c	/^static int32_t next_pos(int32_t pos) {$/;"	f	file:
 offset	lib/kernel/list.h	5;"	d
+open_inodes	device/ide.h	/^	struct list open_inodes; \/\/ 本分区打开的i结点队列$/;"	m	struct:partition	typeref:struct:partition::list
 outb	lib/kernel/io.h	/^static inline void outb(uint16_t port, uint8_t data) {$/;"	f
 outsw	lib/kernel/io.h	/^static inline void outsw(uint16_t port, const void* addr, uint32_t word_cnt) {$/;"	f
 p_mode_start	boot/loader.S	/^p_mode_start:$/;"	l
@@ -438,6 +470,8 @@ page_table_add	kernel/memory.c	/^static void page_table_add(void* _vaddr, void* 
 page_table_pte_remove	kernel/memory.c	/^static void page_table_pte_remove(uint32_t vaddr) {$/;"	f	file:
 palloc	kernel/memory.c	/^static void* palloc(struct pool* m_pool) {$/;"	f	file:
 panic_spin	kernel/debug.c	/^void panic_spin(char* filename,	       \\$/;"	f
+part_tag	device/ide.h	/^	struct list_elem part_tag; \/\/ 用于队列中的标记$/;"	m	struct:partition	typeref:struct:partition::list_elem
+partition	device/ide.h	/^struct partition {$/;"	s
 pde_ptr	kernel/memory.c	/^uint32_t* pde_ptr(uint32_t vaddr) {$/;"	f
 pfree	kernel/memory.c	/^void pfree(uint32_t pg_phy_addr) {$/;"	f
 pgdir	thread/thread.h	/^   uint32_t* pgdir;              \/\/ 进程自己页表的虚拟地址$/;"	m	struct:task_struct
@@ -451,8 +485,11 @@ pool_bitmap	kernel/memory.c	/^   struct bitmap pool_bitmap;	 \/\/ 本内存池�
 pool_flags	kernel/memory.h	/^enum pool_flags {$/;"	g
 pool_size	kernel/memory.c	/^   uint32_t pool_size;		 \/\/ 本内存池字节容量$/;"	m	struct:pool	file:
 pop	kernel/kernel.S	/^   pop ds$/;"	d
+port_base	device/ide.h	/^	uint16_t port_base; \/\/ 本通道的起始端口号,通道1和通道2端口号不同$/;"	m	struct:ide_channel
 prev	lib/kernel/list.h	/^   struct list_elem* prev; \/\/ 前躯结点$/;"	m	struct:list_elem	typeref:struct:list_elem::list_elem
+prim_parts	device/ide.h	/^	struct partition prim_parts[4]; \/\/ 主分区顶多是4个$/;"	m	struct:disk	typeref:struct:disk::partition
 printf	lib/stdio.c	/^uint32_t printf(const char* format, ...) {$/;"	f
+printk	lib/kernel/stdio-kernel.c	/^void printk(const char* format, ...) {$/;"	f
 priority	thread/thread.h	/^   uint8_t priority;$/;"	m	struct:task_struct
 process_activate	userprog/process.c	/^void process_activate(struct task_struct* p_thread) {$/;"	f
 process_execute	userprog/process.c	/^void process_execute(void* filename, char* name) { $/;"	f
@@ -465,9 +502,22 @@ put_int_buffer	lib/kernel/print.S	/^put_int_buffer    dq    0     ; 定义8字�
 put_str	lib/kernel/print.S	/^put_str:$/;"	l
 rd_disk_m_16	boot/mbr.S	/^rd_disk_m_16:	   $/;"	l
 rd_disk_m_32	boot/loader.S	/^rd_disk_m_32:	   $/;"	l
+reg_alt_status	device/ide.c	20;"	d	file:
+reg_cmd	device/ide.c	19;"	d	file:
+reg_ctl	device/ide.c	21;"	d	file:
+reg_data	device/ide.c	11;"	d	file:
+reg_dev	device/ide.c	17;"	d	file:
+reg_error	device/ide.c	12;"	d	file:
+reg_lba_h	device/ide.c	16;"	d	file:
+reg_lba_l	device/ide.c	14;"	d	file:
+reg_lba_m	device/ide.c	15;"	d	file:
+reg_sect_cnt	device/ide.c	13;"	d	file:
+reg_status	device/ide.c	18;"	d	file:
 register_handler	kernel/interrupt.c	/^void register_handler(uint8_t vector_no, intr_handler function) {$/;"	f
 running_thread	thread/thread.c	/^struct task_struct* running_thread() {$/;"	f
+sb	device/ide.h	/^	struct super_block* sb; \/\/ 本分区的超级块$/;"	m	struct:partition	typeref:struct:partition::super_block
 schedule	thread/thread.c	/^void schedule() {$/;"	f
+sec_cnt	device/ide.h	/^	uint32_t sec_cnt; \/\/ 扇区数$/;"	m	struct:partition
 section	kernel/kernel.S	/^section .data$/;"	l
 section	kernel/kernel.S	/^section .text$/;"	l
 section	lib/kernel/print.S	/^section .data$/;"	l
@@ -494,6 +544,7 @@ ss0	userprog/tss.c	/^    uint32_t ss0;$/;"	m	struct:tss	file:
 ss1	userprog/tss.c	/^    uint32_t ss1;$/;"	m	struct:tss	file:
 ss2	userprog/tss.c	/^    uint32_t ss2;$/;"	m	struct:tss	file:
 stack_magic	thread/thread.h	/^   uint32_t stack_magic;	 \/\/ 用这串数字做栈的边界标记,用于检测栈的溢出$/;"	m	struct:task_struct
+start_lba	device/ide.h	/^	uint32_t start_lba; \/\/ 起始扇区$/;"	m	struct:partition
 start_process	userprog/process.c	/^void start_process(void* filename_) {$/;"	f
 status	thread/thread.h	/^   enum task_status status;$/;"	m	struct:task_struct	typeref:enum:task_struct::task_status
 strcat	lib/string.c	/^char* strcat(char* dst_, const char* src_) {$/;"	f
@@ -549,8 +600,10 @@ update_tss_esp	userprog/tss.c	/^void update_tss_esp(struct task_struct* pthread)
 user_pool	kernel/memory.c	/^struct pool kernel_pool, user_pool;      \/\/ 生成内核内存池和用户内存池$/;"	v	typeref:struct:
 userprog_vaddr	thread/thread.h	/^   struct virtual_addr userprog_vaddr;   \/\/ 用户进程的虚拟地址$/;"	m	struct:task_struct	typeref:struct:task_struct::virtual_addr
 va_arg	lib/stdio.c	9;"	d	file:
+va_end	lib/kernel/stdio-kernel.c	8;"	d	file:
 va_end	lib/stdio.c	10;"	d	file:
 va_list	lib/stdio.h	/^typedef char* va_list;$/;"	t
+va_start	lib/kernel/stdio-kernel.c	7;"	d	file:
 va_start	lib/stdio.c	8;"	d	file:
 vaddr_bitmap	kernel/memory.h	/^   struct bitmap vaddr_bitmap;$/;"	m	struct:virtual_addr	typeref:struct:virtual_addr::bitmap
 vaddr_get	kernel/memory.c	/^static void* vaddr_get(enum pool_flags pf, uint32_t pg_cnt) {$/;"	f	file:

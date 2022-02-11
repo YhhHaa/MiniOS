@@ -53,9 +53,11 @@ static void pic_init(void) {
    outb (PIC_S_DATA, 0x02);    // ICW3: 设置从片连接到主片的IR2引脚
    outb (PIC_S_DATA, 0x01);    // ICW4: 8086模式, 正常EOI
    
-/* 只打开时钟中断,其它全部关闭 */
-   outb (PIC_M_DATA, 0xfe);
-   outb (PIC_S_DATA, 0xff);
+	/* IRQ2用于级联从片, 必须打开, 否则无法接受从片上的IRQ14的硬盘中断
+	主片上打开的中断只有IRQ0时钟, IRQ1键盘, 和级联从片的IRQ2
+	从片上打开IRQ14, 接受硬盘控制器中断 */
+   outb (PIC_M_DATA, 0xf8);
+   outb (PIC_S_DATA, 0xbf);
 
    put_str("   pic_init done\n");
 }
