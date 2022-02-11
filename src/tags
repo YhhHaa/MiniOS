@@ -452,6 +452,8 @@ memcmp	lib/string.c	/^int memcmp(const void* a_, const void* b_, uint32_t size) 
 memcpy	lib/string.c	/^void memcpy(void* dst_, const void* src_, uint32_t size) {$/;"	f
 memset	lib/string.c	/^void memset(void* dst_, uint8_t value, uint32_t size) {$/;"	f
 mfree_page	kernel/memory.c	/^void mfree_page(enum pool_flags pf, void* _vaddr, uint32_t pg_cnt) {$/;"	f
+mil_seconds_per_intr	device/timer.c	17;"	d	file:
+mtime_sleep	device/timer.c	/^void mtime_sleep(uint32_t m_seconds) {$/;"	f
 mul	boot/loader.S	/^      mul dx$/;"	d
 mul	boot/mbr.S	/^      mul dx$/;"	d
 my_channel	device/ide.h	/^	struct ide_channel* my_channel; \/\/ 此块硬盘归属于哪个ide通道$/;"	m	struct:disk	typeref:struct:disk::ide_channel
@@ -584,6 +586,7 @@ thread_unblock	thread/thread.c	/^void thread_unblock(struct task_struct* pthread
 thread_yield	thread/thread.c	/^void thread_yield(void) {$/;"	f
 ticks	device/timer.c	/^uint32_t ticks;          \/\/ ticks是内核自中断开启以来总共的嘀嗒数$/;"	v
 ticks	thread/thread.h	/^   uint8_t ticks;	   \/\/ 每次在处理器上执行的时间嘀嗒数$/;"	m	struct:task_struct
+ticks_to_sleep	device/timer.c	/^static void ticks_to_sleep(uint32_t sleep_ticks) {$/;"	f	file:
 timer_init	device/timer.c	/^void timer_init() {$/;"	f
 total_mem_bytes	boot/loader.S	/^   total_mem_bytes dd 0					 $/;"	d
 trace	userprog/tss.c	/^    uint32_t trace;$/;"	m	struct:tss	file:
