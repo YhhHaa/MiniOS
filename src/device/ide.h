@@ -38,6 +38,6 @@ struct ide_channel {
 	struct disk devices[2]; // 一个通道上连接两个硬盘, 一主一丛
 };
 
-void ide_init();
+void ide_init(void);
 
 #endif

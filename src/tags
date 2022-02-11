@@ -363,7 +363,9 @@ head	lib/kernel/list.h	/^   struct list_elem head;$/;"	m	struct:list	typeref:str
 holder	thread/sync.h	/^   struct   task_struct* holder;	    \/\/ 锁的持有者$/;"	m	struct:lock	typeref:struct:lock::task_struct
 holder_repeat_nr	thread/sync.h	/^   uint32_t holder_repeat_nr;		    \/\/ 锁的持有者重复申请锁的次数$/;"	m	struct:lock
 ide_channel	device/ide.h	/^struct ide_channel {$/;"	s
-ide_init	device/ide.c	/^void ide_init() {$/;"	f
+ide_init	device/ide.c	/^void ide_init(void) {$/;"	f
+idle	thread/thread.c	/^static void idle(void* arg) {$/;"	f	file:
+idle_thread	thread/thread.c	/^struct task_struct* idle_thread; \/\/ idle线程$/;"	v	typeref:struct:task_struct
 idt	kernel/interrupt.c	/^static struct gate_desc idt[IDT_DESC_CNT];   \/\/ idt是中断描述符表,本质上就是个中断门描述符数组$/;"	v	typeref:struct:gate_desc	file:
 idt_desc_init	kernel/interrupt.c	/^static void idt_desc_init(void) {$/;"	f	file:
 idt_init	kernel/interrupt.c	/^void idt_init() {$/;"	f
@@ -579,6 +581,7 @@ thread_stack	thread/thread.h	/^struct thread_stack {$/;"	s
 thread_start	thread/thread.c	/^struct task_struct* thread_start(char* name, int prio, thread_func function, void* func_arg) {$/;"	f
 thread_tag	thread/thread.c	/^static struct list_elem* thread_tag;\/\/ 用于保存队列中的线程结点$/;"	v	typeref:struct:list_elem	file:
 thread_unblock	thread/thread.c	/^void thread_unblock(struct task_struct* pthread) {$/;"	f
+thread_yield	thread/thread.c	/^void thread_yield(void) {$/;"	f
 ticks	device/timer.c	/^uint32_t ticks;          \/\/ ticks是内核自中断开启以来总共的嘀嗒数$/;"	v
 ticks	thread/thread.h	/^   uint8_t ticks;	   \/\/ 每次在处理器上执行的时间嘀嗒数$/;"	m	struct:task_struct
 timer_init	device/timer.c	/^void timer_init() {$/;"	f

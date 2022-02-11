@@ -42,7 +42,7 @@ uint8_t channel_cnt; // 按硬盘数计算的通道数
 struct ide_channel channels[2]; // 有两个ide通道
 
 /* 硬盘数据结构初始化 */
-void ide_init() {
+void ide_init(void) {
 	printk("ide_init start\n");
 
 	uint8_t hd_cnt = *((uint8_t*)(0x475)); // BIOS存入的硬盘数量
