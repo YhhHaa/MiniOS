@@ -10,12 +10,14 @@ ASFLAGS	makefile	/^ASFLAGS = -f elf $/;"	m
 ASSERT	kernel/debug.h	13;"	d
 ASSERT	kernel/debug.h	15;"	d
 BITMAP_MASK	lib/kernel/bitmap.h	4;"	d
+BITS_PER_SECTOR	fs/fs.h	5;"	d
 BIT_DEV_DEV	device/ide.c	34;"	d	file:
 BIT_DEV_LBA	device/ide.c	33;"	d	file:
 BIT_DEV_MBS	device/ide.c	32;"	d	file:
 BIT_STAT_BSY	device/ide.c	27;"	d	file:
 BIT_STAT_DRDY	device/ide.c	28;"	d	file:
 BIT_STAT_DRQ	device/ide.c	29;"	d	file:
+BLOCK_SIZE	fs/fs.h	7;"	d
 BUILD_DIR	makefile	/^BUILD_DIR = .\/build$/;"	m
 CC	makefile	/^CC = gcc$/;"	m
 CFLAGS	makefile	/^CFLAGS = -m32 -Wall $(LIB) -c -fno-builtin -W -Wstrict-prototypes \\$/;"	m
@@ -53,6 +55,9 @@ EFLAGS_IOPL_0	kernel/global.h	117;"	d
 EFLAGS_IOPL_3	kernel/global.h	116;"	d
 EFLAGS_MBS	kernel/global.h	113;"	d
 ENTRY_POINT	makefile	/^ENTRY_POINT = 0xc0001500$/;"	m
+FT_DIRECTORY	fs/fs.h	/^	FT_DIRECTORY \/\/ 目录文件$/;"	e	enum:file_types
+FT_REGULAR	fs/fs.h	/^	FT_REGULAR, \/\/ 普通文件$/;"	e	enum:file_types
+FT_UNKNOWN	fs/fs.h	/^	FT_UNKNOWN, \/\/ 不支持的文件类型$/;"	e	enum:file_types
 GDT_ATTR_HIGH	kernel/global.h	46;"	d
 GDT_BASE	boot/loader.S	/^   GDT_BASE:   dd    0x00000000 $/;"	d
 GDT_CODE_ATTR_LOW_DPL3	kernel/global.h	47;"	d
@@ -76,7 +81,9 @@ KBD_BUF_PORT	device/keyboard.c	8;"	d	file:
 K_HEAP_START	kernel/memory.c	22;"	d	file:
 LD	makefile	/^LD = ld$/;"	m
 LDFLAGS	makefile	/^LDFLAGS = -melf_i386 -Ttext $(ENTRY_POINT) -e main -Map $(BUILD_DIR)\/kernel.map$/;"	m
-LIB	makefile	/^LIB = -I lib\/ -I lib\/kernel\/ -I lib\/user\/ -I kernel\/ -I device\/ -I thread\/  -I userprog\/$/;"	m
+LIB	makefile	/^LIB = -I lib\/ -I lib\/kernel\/ -I lib\/user\/ -I kernel\/ -I device\/ -I thread\/  -I userprog\/ -I fs\/$/;"	m
+MAX_FILES_PER_PART	fs/fs.h	4;"	d
+MAX_FILE_NAME_LEN	fs/dir.h	8;"	d
 MEM_BITMAP_BASE	kernel/memory.c	15;"	d	file:
 NULL	kernel/global.h	119;"	d
 OBJS	makefile	/^OBJS = $(BUILD_DIR)\/main.o $(BUILD_DIR)\/init.o $(BUILD_DIR)\/interrupt.o \\$/;"	m
@@ -104,6 +111,7 @@ RPL1	kernel/global.h	30;"	d
 RPL2	kernel/global.h	31;"	d
 RPL3	kernel/global.h	32;"	d
 SECTION	boot/mbr.S	/^SECTION MBR vstart=0x7c00         $/;"	l
+SECTOR_SIZE	fs/fs.h	6;"	d
 SELECTOR_CODE	boot/loader.S	/^   SELECTOR_CODE equ (0x0001<<3) + TI_GDT + RPL0         ; 相当于(CODE_DESC - GDT_BASE)\/8 + TI_GDT + RPL0$/;"	d
 SELECTOR_DATA	boot/loader.S	/^   SELECTOR_DATA equ (0x0002<<3) + TI_GDT + RPL0	 ; 同上$/;"	d
 SELECTOR_K_CODE	kernel/global.h	37;"	d
@@ -190,6 +198,10 @@ __DEVICE_IDE_H	device/ide.h	2;"	d
 __DEVICE_IOQUEUE_H	device/ioqueue.h	2;"	d
 __DEVICE_KEYBOARD_H	device/keyboard.h	2;"	d
 __DEVICE_TIME_H	device/timer.h	2;"	d
+__FS_DIR_H	fs/dir.h	2;"	d
+__FS_FS_H	fs/fs.h	2;"	d
+__FS_INODE_H	fs/inode.h	2;"	d
+__FS_SUPER_BLOCK_H	fs/super_block.h	2;"	d
 __KERNEL_DEBUG_H	kernel/debug.h	2;"	d
 __KERNEL_GLOBAL_H	kernel/global.h	2;"	d
 __KERNEL_INIT_H	kernel/init.h	2;"	d
@@ -240,6 +252,8 @@ bitmap_set	lib/kernel/bitmap.c	/^void bitmap_set(struct bitmap* btmp, uint32_t b
 bits	lib/kernel/bitmap.h	/^   uint8_t* bits;$/;"	m	struct:bitmap
 block2arena	kernel/memory.c	/^static struct arena* block2arena(struct mem_block* b) {$/;"	f	file:
 block_bitmap	device/ide.h	/^	struct bitmap block_bitmap; \/\/ 块位图$/;"	m	struct:partition	typeref:struct:partition::bitmap
+block_bitmap_lba	fs/super_block.h	/^	uint32_t block_bitmap_lba; \/\/ 块位图本身起始扇区地址$/;"	m	struct:super_block
+block_bitmap_sects	fs/super_block.h	/^	uint32_t block_bitmap_sects; \/\/ 扇区位图本身占用的扇区数量$/;"	m	struct:super_block
 block_desc_init	kernel/memory.c	/^void block_desc_init(struct mem_block_desc* desc_array) {$/;"	f
 block_per_arena	kernel/memory.h	/^	uint32_t block_per_arena; \/\/ 本arena中可容纳此mem_block的数量$/;"	m	struct:mem_block_desc
 block_size	kernel/memory.h	/^	uint32_t block_size; \/\/ 内存块大小$/;"	m	struct:mem_block_desc
@@ -277,12 +291,18 @@ ctrl_r_break	device/keyboard.c	35;"	d	file:
 ctrl_r_char	device/keyboard.c	20;"	d	file:
 ctrl_r_make	device/keyboard.c	34;"	d	file:
 ctrl_status	device/keyboard.c	/^static bool ctrl_status, shift_status, alt_status, caps_lock_status, ext_scancode;$/;"	v	file:
+data_start_lba	fs/super_block.h	/^	uint32_t data_start_lba; \/\/ 数据区开始的第一个扇区号$/;"	m	struct:super_block
 dcount	kernel/interrupt.c	/^   uint8_t     dcount;   \/\/此项为双字计数字段，是门描述符中的第4字节。此项固定值，不用考虑$/;"	m	struct:gate_desc	file:
 default_prio	userprog/process.h	5;"	d
 delete	device/keyboard.c	15;"	d	file:
 desc	kernel/memory.c	/^	struct mem_block_desc* desc; \/\/ 此arena关联的mem_block_desc$/;"	m	struct:arena	typeref:struct:arena::mem_block_desc	file:
 dev_no	device/ide.h	/^	uint8_t dev_no; \/\/ 本硬盘是主0还是从1$/;"	m	struct:disk
 devices	device/ide.h	/^	struct disk devices[2]; \/\/ 一个通道上连接两个硬盘, 一主一丛$/;"	m	struct:ide_channel	typeref:struct:ide_channel::disk
+dir	fs/dir.h	/^struct dir {$/;"	s
+dir_buf	fs/dir.h	/^	uint8_t dir_buf[512]; \/\/ 目录的数据缓存$/;"	m	struct:dir
+dir_entry	fs/dir.h	/^struct dir_entry {$/;"	s
+dir_entry_size	fs/super_block.h	/^	uint32_t dir_entry_size; \/\/ 目录项大小$/;"	m	struct:super_block
+dir_pos	fs/dir.h	/^	uint32_t dir_pos; \/\/ 记录在目录内的偏移$/;"	m	struct:dir
 disk	device/ide.h	/^struct disk {$/;"	s
 disk_done	device/ide.h	/^	struct semaphore disk_done; \/\/ 发送完中断, 用于阻塞, 唤醒自身, 防止浪费CPU$/;"	m	struct:ide_channel	typeref:struct:ide_channel::semaphore
 ds	thread/thread.h	/^    uint32_t ds;$/;"	m	struct:intr_stack
@@ -336,7 +356,11 @@ extern	kernel/kernel.S	/^extern idt_table		 ;idt_table是C中注册的中断处�
 extern	kernel/kernel.S	/^extern syscall_table$/;"	l
 f	makefile	/^	dd if=$(BUILD_DIR)\/kernel.bin \\$/;"	m
 f	makefile	/^	dd if=$(BUILD_DIR)\/loader.bin of=hd3M.img bs=512 count=4 seek=2 conv=notrunc$/;"	m
+f_type	fs/dir.h	/^	enum file_types f_type; \/\/ 文件类型$/;"	m	struct:dir_entry	typeref:enum:dir_entry::file_types
 false	kernel/global.h	123;"	d
+file_types	fs/fs.h	/^enum file_types {$/;"	g
+filename	fs/dir.h	/^	char filename[MAX_FILE_NAME_LEN]; \/\/ 普通文件或目录文件名称$/;"	m	struct:dir_entry
+filesys_init	fs/fs.c	/^void filesys_init() {$/;"	f
 free	lib/user/syscall.c	/^void free(void* ptr) {$/;"	f
 free_elem	kernel/memory.h	/^	struct list_elem free_elem;$/;"	m	struct:mem_block	typeref:struct:mem_block::list_elem
 free_list	kernel/memory.h	/^	struct list free_list; \/\/ 目前可用的mem_block链表$/;"	m	struct:mem_block_desc	typeref:struct:mem_block_desc::list
@@ -372,6 +396,11 @@ head	device/ioqueue.h	/^    int32_t head;			    \/\/ 队首,数据往队首处�
 head	lib/kernel/list.h	/^   struct list_elem head;$/;"	m	struct:list	typeref:struct:list::list_elem
 holder	thread/sync.h	/^   struct   task_struct* holder;	    \/\/ 锁的持有者$/;"	m	struct:lock	typeref:struct:lock::task_struct
 holder_repeat_nr	thread/sync.h	/^   uint32_t holder_repeat_nr;		    \/\/ 锁的持有者重复申请锁的次数$/;"	m	struct:lock
+i_no	fs/dir.h	/^	uint32_t i_no; \/\/ 普通文件或目录文件对应的inode编号$/;"	m	struct:dir_entry
+i_no	fs/inode.h	/^	uint32_t i_no; \/\/ inode编号$/;"	m	struct:inode
+i_open_cnt	fs/inode.h	/^	uint32_t i_open_cnt; \/\/ 记录此文件被打开的次数$/;"	m	struct:inode
+i_sectors	fs/inode.h	/^	uint32_t i_sectors[13]; \/\/ 0~11是直接块, 12是一级间接指针块$/;"	m	struct:inode
+i_size	fs/inode.h	/^	uint32_t i_size; \/\/ 当此inode是文件时, i_size是指文件大小; 如果是目录, 指该目录下所有目录项大小之和$/;"	m	struct:inode
 ide_channel	device/ide.h	/^struct ide_channel {$/;"	s
 ide_init	device/ide.c	/^void ide_init(void) {$/;"	f
 ide_read	device/ide.c	/^void ide_read(struct disk* hd, uint32_t lba, void* buf, uint32_t sec_cnt) {$/;"	f
@@ -386,7 +415,15 @@ idt_table	kernel/interrupt.c	/^intr_handler idt_table[IDT_DESC_CNT];$/;"	v
 inb	lib/kernel/io.h	/^static inline uint8_t inb(uint16_t port) {$/;"	f
 init_all	kernel/init.c	/^void init_all() {$/;"	f
 init_thread	thread/thread.c	/^void init_thread(struct task_struct* pthread, char* name, int prio) {$/;"	f
+inode	fs/dir.h	/^	struct inode* inode; \/\/ 指向内存中的inode$/;"	m	struct:dir	typeref:struct:dir::inode
+inode	fs/inode.h	/^struct inode {$/;"	s
 inode_bitmap	device/ide.h	/^	struct bitmap inode_bitmap; \/\/ i结点位图$/;"	m	struct:partition	typeref:struct:partition::bitmap
+inode_bitmap_lba	fs/super_block.h	/^	uint32_t inode_bitmap_lba; \/\/ i结点位图起始扇区lba地址$/;"	m	struct:super_block
+inode_bitmap_sects	fs/super_block.h	/^	uint32_t inode_bitmap_sects; \/\/ i结点位图占用的扇区数量$/;"	m	struct:super_block
+inode_cnt	fs/super_block.h	/^	uint32_t inode_cnt; \/\/ 本分区中inode数量$/;"	m	struct:super_block
+inode_table_lba	fs/super_block.h	/^	uint32_t inode_table_lba; \/\/ i结点表起始扇区lba地址$/;"	m	struct:super_block
+inode_table_sects	fs/super_block.h	/^	uint32_t inode_table_sects; \/\/ i结点表占用的扇区数量$/;"	m	struct:super_block
+inode_tag	fs/inode.h	/^	struct list_elem inode_tag; \/\/ 用于加入已打开的inode列表, 相当于内存缓冲$/;"	m	struct:inode	typeref:struct:inode::list_elem
 insw	lib/kernel/io.h	/^static inline void insw(uint16_t port, void* addr, uint32_t word_cnt) {$/;"	f
 int16_t	lib/stdint.h	/^typedef signed short int int16_t;$/;"	t
 int32_t	lib/stdint.h	/^typedef signed int int32_t;$/;"	t
@@ -450,6 +487,7 @@ lock_acquire	thread/sync.c	/^void lock_acquire(struct lock* plock) {$/;"	f
 lock_init	thread/sync.c	/^void lock_init(struct lock* plock) {$/;"	f
 lock_release	thread/sync.c	/^void lock_release(struct lock* plock) {$/;"	f
 logic_parts	device/ide.h	/^	struct partition logic_parts[8]; \/\/ 逻辑分区支持8个$/;"	m	struct:disk	typeref:struct:disk::partition
+magic	fs/super_block.h	/^	uint32_t magic; \/\/ 标识文件系统类型$/;"	m	struct:super_block
 main	kernel/main.c	/^int main(void) {$/;"	f
 main_thread	thread/thread.c	/^struct task_struct* main_thread;    \/\/ 主线程PCB$/;"	v	typeref:struct:task_struct
 make_gdt_desc	userprog/tss.c	/^static struct gdt_desc make_gdt_desc(uint32_t* desc_addr, uint32_t limit, uint8_t attr_low, uint8_t attr_high) {$/;"	f	file:
@@ -486,13 +524,16 @@ outb	lib/kernel/io.h	/^static inline void outb(uint16_t port, uint8_t data) {$/;
 outsw	lib/kernel/io.h	/^static inline void outsw(uint16_t port, const void* addr, uint32_t word_cnt) {$/;"	f
 p_mode_start	boot/loader.S	/^p_mode_start:$/;"	l
 p_no	device/ide.c	/^uint8_t p_no = 0, l_no = 0; \/\/ 用来记录硬盘主分区和逻辑分区的下标$/;"	v
+pad	fs/super_block.h	/^	uint8_t pad[460]; \/\/ 凑够512字节$/;"	m	struct:super_block
 page_dir_activate	userprog/process.c	/^void page_dir_activate(struct task_struct* p_thread) {$/;"	f
 page_table_add	kernel/memory.c	/^static void page_table_add(void* _vaddr, void* _page_phyaddr) {$/;"	f	file:
 page_table_pte_remove	kernel/memory.c	/^static void page_table_pte_remove(uint32_t vaddr) {$/;"	f	file:
 palloc	kernel/memory.c	/^static void* palloc(struct pool* m_pool) {$/;"	f	file:
 panic_spin	kernel/debug.c	/^void panic_spin(char* filename,	       \\$/;"	f
+part_lba_base	fs/super_block.h	/^	uint32_t part_lba_base; \/\/ 本分区的起始lba地址$/;"	m	struct:super_block
 part_tag	device/ide.h	/^	struct list_elem part_tag; \/\/ 用于队列中的标记$/;"	m	struct:partition	typeref:struct:partition::list_elem
 partition	device/ide.h	/^struct partition {$/;"	s
+partition_format	fs/fs.c	/^static void partition_format(struct partition* part) {$/;"	f	file:
 partition_info	device/ide.c	/^static bool partition_info(struct list_elem* pelem, int arg UNUSED) {$/;"	f	file:
 partition_list	device/ide.c	/^struct list partition_list; \/\/ 分区队列$/;"	v	typeref:struct:list
 partition_scan	device/ide.c	/^static void partition_scan(struct disk* hd, uint32_t ext_lba) {$/;"	f	file:
@@ -541,11 +582,13 @@ reg_lba_m	device/ide.c	18;"	d	file:
 reg_sect_cnt	device/ide.c	16;"	d	file:
 reg_status	device/ide.c	21;"	d	file:
 register_handler	kernel/interrupt.c	/^void register_handler(uint8_t vector_no, intr_handler function) {$/;"	f
+root_inode_no	fs/super_block.h	/^	uint32_t root_inode_no; \/\/ 根目录所在的i结点号$/;"	m	struct:super_block
 running_thread	thread/thread.c	/^struct task_struct* running_thread() {$/;"	f
 sb	device/ide.h	/^	struct super_block* sb; \/\/ 本分区的超级块$/;"	m	struct:partition	typeref:struct:partition::super_block
 schedule	thread/thread.c	/^void schedule() {$/;"	f
 sec_cnt	device/ide.c	/^	uint32_t sec_cnt; \/\/ 本分区的扇区数目$/;"	m	struct:partition_table_entry	file:
 sec_cnt	device/ide.h	/^	uint32_t sec_cnt; \/\/ 扇区数$/;"	m	struct:partition
+sec_cnt	fs/super_block.h	/^	uint32_t sec_cnt; \/\/ 本分区总共的扇区数$/;"	m	struct:super_block
 section	kernel/kernel.S	/^section .data$/;"	l
 section	kernel/kernel.S	/^section .text$/;"	l
 section	lib/kernel/print.S	/^section .data$/;"	l
@@ -589,6 +632,7 @@ strcmp	lib/string.c	/^int8_t strcmp (const char* a, const char* b) {$/;"	f
 strcpy	lib/string.c	/^char* strcpy(char* dst_, const char* src_) {$/;"	f
 strlen	lib/string.c	/^uint32_t strlen(const char* str) {$/;"	f
 strrchr	lib/string.c	/^char* strrchr(const char* str, const uint8_t ch) {$/;"	f
+super_block	fs/super_block.h	/^struct super_block {$/;"	s
 swap_pairs_bytes	device/ide.c	/^static void swap_pairs_bytes(const char* dst, char* buf, uint32_t len) {$/;"	f	file:
 switch_to	thread/switch.S	/^switch_to:$/;"	l
 sys_free	kernel/memory.c	/^void sys_free(void* ptr) {$/;"	f
@@ -655,3 +699,4 @@ waiters	thread/sync.h	/^   struct   list waiters;$/;"	m	struct:semaphore	typeref
 wakeup	device/ioqueue.c	/^static void wakeup(struct task_struct** waiter) {$/;"	f	file:
 write	lib/user/syscall.c	/^uint32_t write(char* str) {$/;"	f
 write2sector	device/ide.c	/^static void write2sector(struct disk* hd, void* buf, uint8_t sec_cnt) {$/;"	f	file:
+write_deny	fs/inode.h	/^	bool write_deny; \/\/ 写文件不能并行, 进程写文件前查看此标识$/;"	m	struct:inode
