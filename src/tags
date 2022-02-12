@@ -291,6 +291,7 @@ ctrl_r_break	device/keyboard.c	35;"	d	file:
 ctrl_r_char	device/keyboard.c	20;"	d	file:
 ctrl_r_make	device/keyboard.c	34;"	d	file:
 ctrl_status	device/keyboard.c	/^static bool ctrl_status, shift_status, alt_status, caps_lock_status, ext_scancode;$/;"	v	file:
+cur_part	fs/fs.c	/^struct partition* cur_part; \/\/ 默认情况下操作的是哪个分区$/;"	v	typeref:struct:partition
 data_start_lba	fs/super_block.h	/^	uint32_t data_start_lba; \/\/ 数据区开始的第一个扇区号$/;"	m	struct:super_block
 dcount	kernel/interrupt.c	/^   uint8_t     dcount;   \/\/此项为双字计数字段，是门描述符中的第4字节。此项固定值，不用考虑$/;"	m	struct:gate_desc	file:
 default_prio	userprog/process.h	5;"	d
@@ -506,6 +507,7 @@ memcpy	lib/string.c	/^void memcpy(void* dst_, const void* src_, uint32_t size) {
 memset	lib/string.c	/^void memset(void* dst_, uint8_t value, uint32_t size) {$/;"	f
 mfree_page	kernel/memory.c	/^void mfree_page(enum pool_flags pf, void* _vaddr, uint32_t pg_cnt) {$/;"	f
 mil_seconds_per_intr	device/timer.c	17;"	d	file:
+mount_partition	fs/fs.c	/^static bool mount_partition(struct list_elem* pelem, int arg) {$/;"	f	file:
 mtime_sleep	device/timer.c	/^void mtime_sleep(uint32_t m_seconds) {$/;"	f
 mul	boot/loader.S	/^      mul dx$/;"	d
 mul	boot/mbr.S	/^      mul dx$/;"	d
