@@ -121,7 +121,8 @@ $(BUILD_DIR)/stdio-kernel.o: lib/kernel/stdio-kernel.c  lib/kernel/stdio-kernel.
 
 $(BUILD_DIR)/ide.o: device/ide.c device/ide.h lib/kernel/stdio-kernel.h \
 	thread/sync.h lib/stdio.h kernel/interrupt.h kernel/memory.h \
-	kernel/debug.h lib/string.h lib/kernel/io.h device/timer.h
+	kernel/debug.h lib/string.h lib/kernel/io.h device/timer.h \
+	lib/kernel/list.h
 	$(CC) $(CFLAGS) $< -o $@
 
 ##############    汇编代码编译    ###############
