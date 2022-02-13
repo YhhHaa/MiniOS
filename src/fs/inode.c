@@ -1,6 +1,6 @@
 #include "inode.h"
 #include "fs.h"
-// #include "file.h"
+#include "file.h"
 #include "global.h"
 #include "debug.h"
 #include "memory.h"
