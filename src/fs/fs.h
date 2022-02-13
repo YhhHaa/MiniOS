@@ -12,6 +12,8 @@ enum file_types {
 	FT_REGULAR, // 普通文件
 	FT_DIRECTORY // 目录文件
 };
+
+extern struct partition* cur_part; // 默认情况下操作的是哪个分区
 void filesys_init(void);
 
 #endif
