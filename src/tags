@@ -385,6 +385,7 @@ file	fs/file.h	/^struct file {$/;"	s
 file_close	fs/file.c	/^int32_t file_close(struct file* file) {$/;"	f
 file_create	fs/file.c	/^int32_t file_create(struct dir* parent_dir, char* filename, uint8_t flag) {$/;"	f
 file_open	fs/file.c	/^int32_t file_open(uint32_t inode_no, uint8_t flag) {$/;"	f
+file_read	fs/file.c	/^int32_t file_read(struct file* file, void* buf, uint32_t count) {$/;"	f
 file_table	fs/file.c	/^struct file file_table[MAX_FILE_OPEN];$/;"	v	typeref:struct:file
 file_type	fs/fs.h	/^    enum file_types file_type; \/\/ 文件类型$/;"	m	struct:path_search_record	typeref:enum:path_search_record::file_types
 file_types	fs/fs.h	/^enum file_types {$/;"	g
@@ -697,6 +698,7 @@ sys_free	kernel/memory.c	/^void sys_free(void* ptr) {$/;"	f
 sys_getpid	userprog/syscall-init.c	/^uint32_t sys_getpid(void) {$/;"	f
 sys_malloc	kernel/memory.c	/^void* sys_malloc(uint32_t size) {$/;"	f
 sys_open	fs/fs.c	/^int32_t sys_open(const char* pathname, uint8_t flags) {$/;"	f
+sys_read	fs/fs.c	/^int32_t sys_read(int32_t fd, void* buf, uint32_t count) {$/;"	f
 sys_write	fs/fs.c	/^int32_t sys_write(int32_t fd, const void* buf, uint32_t count) {$/;"	f
 syscall	userprog/syscall-init.c	/^typedef void* syscall;$/;"	t	file:
 syscall_handler	kernel/kernel.S	/^syscall_handler:$/;"	l

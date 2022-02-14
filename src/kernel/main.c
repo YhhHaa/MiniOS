@@ -9,6 +9,7 @@
 #include "stdio.h"
 #include "memory.h"
 #include "fs.h"
+#include "string.h"
 
 void k_thread_a(void*);
 void k_thread_b(void*);
@@ -16,22 +17,41 @@ void u_prog_a(void);
 void u_prog_b(void);
 
 int main(void) {
-   put_str("I am kernel\n");
-   init_all();
-   process_execute(u_prog_a, "u_prog_a");
-   process_execute(u_prog_b, "u_prog_b");
-   thread_start("k_thread_a", 31, k_thread_a, "I am thread_a");
-   thread_start("k_thread_b", 31, k_thread_b, "I am thread_b");
-   
-   uint32_t fd = sys_open("/file1", O_RDWR); // 0xA6C
-   printf("fd:%d\n", fd);
-   sys_write(fd, "hello,world\n", 12);
-   sys_close(fd);
-   printf("%d closed now\n", fd);
+    put_str("I am kernel\n");
+    init_all();
+    intr_enable(); // 打开中断
+ 
+    uint32_t fd = sys_open("/file1",O_RDWR);
+    printf("open /file1 fd:%d\n",fd);
+	
+	sys_write(fd, "hello,world\n", 12);
+	sys_write(fd, "hello,world\n", 12);
 
-   while(1);
-   return 0;
+	sys_close(fd);
+
+	fd = sys_open("/file1",O_RDWR);
+    printf("2 open /file1 fd:%d\n",fd);
+
+    char buf[64] = { 0 };
+    int read_bytes = sys_read(fd,buf,6);
+    printf("1_ read %d byte:\n%s\n",read_bytes,buf);
+    
+    memset(buf,0,64);
+    read_bytes = sys_read(fd,buf,12);
+    printf("2_ read %d byte:\n%s\n",read_bytes,buf);
+ 
+    sys_close(fd);
+    printf("%d closed now and reopen \n",fd);
+    
+    fd = sys_open("/file1",O_RDWR);
+    memset(buf,0,64);
+    read_bytes = sys_read(fd,buf,10);
+    printf("3_ read %d byte:\n%s\n",read_bytes,buf);
+    
+    while(1);
+    return 0;
 }
+
 
 /* 在线程中运行的函数 */
 void k_thread_a(void* arg) {     
