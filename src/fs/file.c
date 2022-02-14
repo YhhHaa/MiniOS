@@ -187,3 +187,38 @@ rollback:
     sys_free(io_buf);
     return -1;
 }
+
+// 打开编号为 inode_no 的 inode 对应的文件, 若成功则返回文件描述符, 否则返回 -1
+int32_t file_open(uint32_t inode_no, uint8_t flag) {
+	/* 1. 在文件结构表中申请一个空闲位 */
+    int fd_idx = get_free_slot_in_global();
+    if (fd_idx == -1) {
+        printk("exceed max open files\n");
+        return -1;
+    }
+
+	/* 2. 打开inode */
+    file_table[fd_idx].fd_inode = inode_open(cur_part, inode_no);
+    file_table[fd_idx].fd_pos = 0; // 每次打开文件, 要将 fd_pos 还原为 0, 即让文件内的指针指向开头
+    file_table[fd_idx].fd_flag = flag;
+    bool* write_deny = &file_table[fd_idx].fd_inode->write_deny;
+	
+    // 只要是关于写文件, 判断是否有其它进程正写此文件
+    if (flag & O_WRONLY || flag & O_RDWR) {
+        // 进入临界区要关中断
+        enum intr_status old_status = intr_disable();
+        // 若当前没有其它进程写该文件, 将其占用
+        if (!(*write_deny)) {
+            *write_deny = true; // 置为 true, 避免多个进程同时写此文件
+            intr_set_status(old_status);
+        } else {
+            intr_set_status(old_status);
+            printk("file can`t be write now, try again later\n");
+            return -1;
+        }
+    }
+
+	/* 3. pcb的fd_table中寻找空闲位并填入fd_idx */
+    return pcb_fd_install(fd_idx);
+}
+

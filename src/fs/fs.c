@@ -347,7 +347,8 @@ int32_t sys_open(const char* pathname, uint8_t flags) {
             dir_close(searched_record.parent_dir);
             break;
         // 其余为打开文件
- 
+		default:
+			fd = file_open(inode_no, flags);
     }
  
     // 此 fd 是指任务 pcb->fd_table 数组中的元素下标
