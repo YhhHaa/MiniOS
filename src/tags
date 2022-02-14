@@ -704,6 +704,7 @@ sys_free	kernel/memory.c	/^void sys_free(void* ptr) {$/;"	f
 sys_getpid	userprog/syscall-init.c	/^uint32_t sys_getpid(void) {$/;"	f
 sys_lseek	fs/fs.c	/^int32_t sys_lseek(int32_t fd, int32_t offset, uint8_t whence) {$/;"	f
 sys_malloc	kernel/memory.c	/^void* sys_malloc(uint32_t size) {$/;"	f
+sys_mkdir	fs/fs.c	/^int32_t sys_mkdir(const char* pathname) {$/;"	f
 sys_open	fs/fs.c	/^int32_t sys_open(const char* pathname, uint8_t flags) {$/;"	f
 sys_read	fs/fs.c	/^int32_t sys_read(int32_t fd, void* buf, uint32_t count) {$/;"	f
 sys_unlink	fs/fs.c	/^int32_t sys_unlink(const char* pathname) {$/;"	f
