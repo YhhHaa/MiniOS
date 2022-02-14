@@ -314,6 +314,7 @@ data_start_lba	fs/super_block.h	/^	uint32_t data_start_lba; \/\/ 数据区开始
 dcount	kernel/interrupt.c	/^   uint8_t     dcount;   \/\/此项为双字计数字段，是门描述符中的第4字节。此项固定值，不用考虑$/;"	m	struct:gate_desc	file:
 default_prio	userprog/process.h	5;"	d
 delete	device/keyboard.c	15;"	d	file:
+delete_dir_entry	fs/dir.c	/^bool delete_dir_entry(struct partition* part, struct dir* pdir, uint32_t inode_no, void* io_buf) {$/;"	f
 desc	kernel/memory.c	/^	struct mem_block_desc* desc; \/\/ 此arena关联的mem_block_desc$/;"	m	struct:arena	typeref:struct:arena::mem_block_desc	file:
 dev_no	device/ide.h	/^	uint8_t dev_no; \/\/ 本硬盘是主0还是从1$/;"	m	struct:disk
 devices	device/ide.h	/^	struct disk devices[2]; \/\/ 一个通道上连接两个硬盘, 一主一丛$/;"	m	struct:ide_channel	typeref:struct:ide_channel::disk
@@ -458,10 +459,12 @@ inode_bitmap_lba	fs/super_block.h	/^	uint32_t inode_bitmap_lba; \/\/ i结点位�
 inode_bitmap_sects	fs/super_block.h	/^	uint32_t inode_bitmap_sects; \/\/ i结点位图占用的扇区数量$/;"	m	struct:super_block
 inode_close	fs/inode.c	/^void inode_close(struct inode* inode) {$/;"	f
 inode_cnt	fs/super_block.h	/^	uint32_t inode_cnt; \/\/ 本分区中inode数量$/;"	m	struct:super_block
+inode_delete	fs/inode.c	/^void inode_delete(struct partition* part, uint32_t inode_no, void* io_buf) {$/;"	f
 inode_init	fs/inode.c	/^void inode_init(uint32_t inode_no, struct inode* new_inode) {$/;"	f
 inode_locate	fs/inode.c	/^static void inode_locate(struct partition* part, $/;"	f	file:
 inode_open	fs/inode.c	/^struct inode* inode_open(struct partition* part, uint32_t inode_no) {$/;"	f
 inode_position	fs/inode.c	/^struct inode_position {$/;"	s	file:
+inode_release	fs/inode.c	/^void inode_release(struct partition* part, uint32_t inode_no) {$/;"	f
 inode_sync	fs/inode.c	/^void inode_sync(struct partition* part, struct inode* inode, void* io_buf) {$/;"	f
 inode_table_lba	fs/super_block.h	/^	uint32_t inode_table_lba; \/\/ i结点表起始扇区lba地址$/;"	m	struct:super_block
 inode_table_sects	fs/super_block.h	/^	uint32_t inode_table_sects; \/\/ i结点表占用的扇区数量$/;"	m	struct:super_block
@@ -703,6 +706,7 @@ sys_lseek	fs/fs.c	/^int32_t sys_lseek(int32_t fd, int32_t offset, uint8_t whence
 sys_malloc	kernel/memory.c	/^void* sys_malloc(uint32_t size) {$/;"	f
 sys_open	fs/fs.c	/^int32_t sys_open(const char* pathname, uint8_t flags) {$/;"	f
 sys_read	fs/fs.c	/^int32_t sys_read(int32_t fd, void* buf, uint32_t count) {$/;"	f
+sys_unlink	fs/fs.c	/^int32_t sys_unlink(const char* pathname) {$/;"	f
 sys_write	fs/fs.c	/^int32_t sys_write(int32_t fd, const void* buf, uint32_t count) {$/;"	f
 syscall	userprog/syscall-init.c	/^typedef void* syscall;$/;"	t	file:
 syscall_handler	kernel/kernel.S	/^syscall_handler:$/;"	l
