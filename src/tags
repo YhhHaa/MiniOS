@@ -700,12 +700,14 @@ swap_pairs_bytes	device/ide.c	/^static void swap_pairs_bytes(const char* dst, ch
 switch_to	thread/switch.S	/^switch_to:$/;"	l
 sync_dir_entry	fs/dir.c	/^bool sync_dir_entry(struct dir* parent_dir, struct dir_entry* p_de, void* io_buf) {$/;"	f
 sys_close	fs/fs.c	/^int32_t sys_close(int32_t fd) {$/;"	f
+sys_closedir	fs/fs.c	/^int32_t sys_closedir(struct dir* dir) {$/;"	f
 sys_free	kernel/memory.c	/^void sys_free(void* ptr) {$/;"	f
 sys_getpid	userprog/syscall-init.c	/^uint32_t sys_getpid(void) {$/;"	f
 sys_lseek	fs/fs.c	/^int32_t sys_lseek(int32_t fd, int32_t offset, uint8_t whence) {$/;"	f
 sys_malloc	kernel/memory.c	/^void* sys_malloc(uint32_t size) {$/;"	f
 sys_mkdir	fs/fs.c	/^int32_t sys_mkdir(const char* pathname) {$/;"	f
 sys_open	fs/fs.c	/^int32_t sys_open(const char* pathname, uint8_t flags) {$/;"	f
+sys_opendir	fs/fs.c	/^struct dir* sys_opendir(const char* name) {$/;"	f
 sys_read	fs/fs.c	/^int32_t sys_read(int32_t fd, void* buf, uint32_t count) {$/;"	f
 sys_unlink	fs/fs.c	/^int32_t sys_unlink(const char* pathname) {$/;"	f
 sys_write	fs/fs.c	/^int32_t sys_write(int32_t fd, const void* buf, uint32_t count) {$/;"	f

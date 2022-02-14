@@ -11,6 +11,7 @@
 #include "fs.h"
 #include "string.h"
 #include "fs.h"
+#include "dir.h"
 
 void k_thread_a(void*);
 void k_thread_b(void*);
@@ -21,20 +22,21 @@ int main(void) {
    put_str("I am kernel\n");
    init_all();
    intr_enable(); // 打开中断
+
+   sys_mkdir("/dir1");
+   sys_mkdir("/dir1/subdir1");
  
-   printf("/dirl/subdirl create %s!\n",sys_mkdir("/dirl/subdirl") == 0 ? "done" : "fail"); 
-   printf("/dirl create %s!\n", sys_mkdir("/dirl") == 0? "done" : "fail"); 
-   printf ("now, /dirl/subdirl create %s ! \n", sys_mkdir("/dirl/subdirl") == 0 ? "done" : "fail"); 
-   int fd = sys_open ("/dirl/subdirl/file2", O_CREAT | O_RDWR); 
-   if (fd != -1) { 
-      printf("/dirl/subdirl/file2 create done!\n"); 
-      sys_write(fd, "Catch me if you can!\n", 21); 
-      sys_lseek (fd, 0, SEEK_SET); 
-      char buf [32] = {0}; 
-      sys_read(fd, buf, 21); 
-      printf ("/dirl'/subdirl/file2 says: \n%s", buf); 
-      sys_close (fd); 
-}
+	struct dir* p_dir = sys_opendir("/dir1/subdir1");
+	if (p_dir) {
+		printf("/dir1/subdir1 open done!\n");
+		if (sys_closedir(p_dir) == 0) {
+			printf("/dir1/subdir1 close done!\n");
+		} else {
+			printf("/dir1/subdir1 close fail!\n");
+		}
+	} else {
+		printf("/dir1/subdir1 open fail!\n");
+	}
     while(1);
     return 0;
 }
