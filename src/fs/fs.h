@@ -24,6 +24,13 @@ enum oflags { // 按位来表示
 	O_RDWR, // 0x10读写
 	O_CREAT = 4 // 0x100创建
 };
+
+/* 文件读写位置偏移量 */
+enum whence {
+	SEEK_SET = 1, // offset参照物是文件开始处
+	SEEK_CUR, // offset参照是文件当前读写位置
+	SEEK_END // offset参照物是文件尺寸大小
+};
  
 // 用来记录查找文件过程中已找到的上级路径
 struct path_search_record {
@@ -38,6 +45,7 @@ int32_t sys_open(const char* pathname, uint8_t flags);
 int32_t sys_close(int32_t fd);
 int32_t sys_write(int32_t fd, const void* buf, uint32_t count);
 int32_t sys_read(int32_t fd, void* buf, uint32_t count);
+int32_t sys_lseek(int32_t fd, int32_t offset, uint8_t whence);
 void filesys_init(void);
 
 #endif

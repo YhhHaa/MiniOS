@@ -10,6 +10,7 @@
 #include "memory.h"
 #include "fs.h"
 #include "string.h"
+#include "fs.h"
 
 void k_thread_a(void*);
 void k_thread_b(void*);
@@ -23,31 +24,27 @@ int main(void) {
  
     uint32_t fd = sys_open("/file1",O_RDWR);
     printf("open /file1 fd:%d\n",fd);
-	
-	sys_write(fd, "hello,world\n", 12);
-	sys_write(fd, "hello,world\n", 12);
-
-	sys_close(fd);
-
-	fd = sys_open("/file1",O_RDWR);
-    printf("2 open /file1 fd:%d\n",fd);
 
     char buf[64] = { 0 };
-    int read_bytes = sys_read(fd,buf,6);
+    int read_bytes = sys_read(fd,buf, 18);
     printf("1_ read %d byte:\n%s\n",read_bytes,buf);
     
     memset(buf,0,64);
-    read_bytes = sys_read(fd,buf,12);
+    read_bytes = sys_read(fd,buf, 6);
     printf("2_ read %d byte:\n%s\n",read_bytes,buf);
- 
-    sys_close(fd);
-    printf("%d closed now and reopen \n",fd);
-    
-    fd = sys_open("/file1",O_RDWR);
+
     memset(buf,0,64);
-    read_bytes = sys_read(fd,buf,10);
+	read_bytes = sys_read(fd,buf, 6);
     printf("3_ read %d byte:\n%s\n",read_bytes,buf);
+ 
+	printf("__________SEEK_SET 0__________\n");
+    sys_lseek(fd, 0, SEEK_SET);
     
+    memset(buf,0,64);
+    read_bytes = sys_read(fd,buf, 24);
+    printf("4_ read %d byte:\n%s\n",read_bytes,buf);
+    
+	sys_close(fd);
     while(1);
     return 0;
 }

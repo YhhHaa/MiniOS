@@ -122,6 +122,9 @@ RPL2	kernel/global.h	31;"	d
 RPL3	kernel/global.h	32;"	d
 SECTION	boot/mbr.S	/^SECTION MBR vstart=0x7c00         $/;"	l
 SECTOR_SIZE	fs/fs.h	8;"	d
+SEEK_CUR	fs/fs.h	/^	SEEK_CUR, \/\/ offset参照是文件当前读写位置$/;"	e	enum:whence
+SEEK_END	fs/fs.h	/^	SEEK_END \/\/ offset参照物是文件尺寸大小$/;"	e	enum:whence
+SEEK_SET	fs/fs.h	/^	SEEK_SET = 1, \/\/ offset参照物是文件开始处$/;"	e	enum:whence
 SELECTOR_CODE	boot/loader.S	/^   SELECTOR_CODE equ (0x0001<<3) + TI_GDT + RPL0         ; 相当于(CODE_DESC - GDT_BASE)\/8 + TI_GDT + RPL0$/;"	d
 SELECTOR_DATA	boot/loader.S	/^   SELECTOR_DATA equ (0x0002<<3) + TI_GDT + RPL0	 ; 同上$/;"	d
 SELECTOR_K_CODE	kernel/global.h	37;"	d
@@ -696,6 +699,7 @@ sync_dir_entry	fs/dir.c	/^bool sync_dir_entry(struct dir* parent_dir, struct dir
 sys_close	fs/fs.c	/^int32_t sys_close(int32_t fd) {$/;"	f
 sys_free	kernel/memory.c	/^void sys_free(void* ptr) {$/;"	f
 sys_getpid	userprog/syscall-init.c	/^uint32_t sys_getpid(void) {$/;"	f
+sys_lseek	fs/fs.c	/^int32_t sys_lseek(int32_t fd, int32_t offset, uint8_t whence) {$/;"	f
 sys_malloc	kernel/memory.c	/^void* sys_malloc(uint32_t size) {$/;"	f
 sys_open	fs/fs.c	/^int32_t sys_open(const char* pathname, uint8_t flags) {$/;"	f
 sys_read	fs/fs.c	/^int32_t sys_read(int32_t fd, void* buf, uint32_t count) {$/;"	f
@@ -759,6 +763,7 @@ virtual_addr	kernel/memory.h	/^struct virtual_addr {$/;"	s
 vsprintf	lib/stdio.c	/^uint32_t vsprintf(char* str, const char* format, va_list ap) {$/;"	f
 waiters	thread/sync.h	/^   struct   list waiters;$/;"	m	struct:semaphore	typeref:struct:semaphore::list
 wakeup	device/ioqueue.c	/^static void wakeup(struct task_struct** waiter) {$/;"	f	file:
+whence	fs/fs.h	/^enum whence {$/;"	g
 write	lib/user/syscall.c	/^uint32_t write(int32_t fd, const void* buf, uint32_t count) {$/;"	f
 write2sector	device/ide.c	/^static void write2sector(struct disk* hd, void* buf, uint8_t sec_cnt) {$/;"	f	file:
 write_deny	fs/inode.h	/^	bool write_deny; \/\/ 写文件不能并行, 进程写文件前查看此标识$/;"	m	struct:inode
