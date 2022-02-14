@@ -381,6 +381,7 @@ fd_inode	fs/file.h	/^   struct inode* fd_inode; \/\/ 指向inode队列(part->ope
 fd_pos	fs/file.h	/^   uint32_t fd_pos;      \/\/ 记录当前文件操作的偏移地址,以0为起始,最大为文件大小-1$/;"	m	struct:file
 fd_table	thread/thread.h	/^   int32_t fd_table[MAX_FILES_OPEN_PER_PROC]; \/\/ 文件描述符数组$/;"	m	struct:task_struct
 file	fs/file.h	/^struct file {$/;"	s
+file_create	fs/file.c	/^int32_t file_create(struct dir* parent_dir, char* filename, uint8_t flag) {$/;"	f
 file_table	fs/file.c	/^struct file file_table[MAX_FILE_OPEN];$/;"	v	typeref:struct:file
 file_type	fs/fs.h	/^    enum file_types file_type; \/\/ 文件类型$/;"	m	struct:path_search_record	typeref:enum:path_search_record::file_types
 file_types	fs/fs.h	/^enum file_types {$/;"	g
@@ -690,6 +691,7 @@ sync_dir_entry	fs/dir.c	/^bool sync_dir_entry(struct dir* parent_dir, struct dir
 sys_free	kernel/memory.c	/^void sys_free(void* ptr) {$/;"	f
 sys_getpid	userprog/syscall-init.c	/^uint32_t sys_getpid(void) {$/;"	f
 sys_malloc	kernel/memory.c	/^void* sys_malloc(uint32_t size) {$/;"	f
+sys_open	fs/fs.c	/^int32_t sys_open(const char* pathname, uint8_t flags) {$/;"	f
 sys_write	userprog/syscall-init.c	/^uint32_t sys_write(char* str) {$/;"	f
 syscall	userprog/syscall-init.c	/^typedef void* syscall;$/;"	t	file:
 syscall_handler	kernel/kernel.S	/^syscall_handler:$/;"	l

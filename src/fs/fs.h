@@ -34,6 +34,7 @@ struct path_search_record {
 
 extern struct partition* cur_part; // 默认情况下操作的是哪个分区
 int32_t path_depth_cnt(char* pathname);
+int32_t sys_open(const char* pathname, uint8_t flags);
 void filesys_init(void);
 
 #endif
