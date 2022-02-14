@@ -222,3 +222,13 @@ int32_t file_open(uint32_t inode_no, uint8_t flag) {
     return pcb_fd_install(fd_idx);
 }
 
+// 关闭文件
+int32_t file_close(struct file* file) {
+    if (file == NULL) {
+        return -1;
+    }
+    file->fd_inode->write_deny = false;
+    inode_close(file->fd_inode);
+    file->fd_inode = NULL; // 使文件结构可用
+    return 0;
+}
