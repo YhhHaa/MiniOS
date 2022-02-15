@@ -310,6 +310,7 @@ ctrl_r_char	device/keyboard.c	20;"	d	file:
 ctrl_r_make	device/keyboard.c	34;"	d	file:
 ctrl_status	device/keyboard.c	/^static bool ctrl_status, shift_status, alt_status, caps_lock_status, ext_scancode;$/;"	v	file:
 cur_part	fs/fs.c	/^struct partition* cur_part; \/\/ 默认情况下操作的是哪个分区$/;"	v	typeref:struct:partition
+cwd_inode_nr	thread/thread.h	/^   uint32_t cwd_inode_nr; \/\/ 进程所在的工作目录的inode编号$/;"	m	struct:task_struct
 data_start_lba	fs/super_block.h	/^	uint32_t data_start_lba; \/\/ 数据区开始的第一个扇区号$/;"	m	struct:super_block
 dcount	kernel/interrupt.c	/^   uint8_t     dcount;   \/\/此项为双字计数字段，是门描述符中的第4字节。此项固定值，不用考虑$/;"	m	struct:gate_desc	file:
 default_prio	userprog/process.h	5;"	d
@@ -417,8 +418,10 @@ gdt_ptr	boot/loader.S	/^   gdt_ptr  dw  GDT_LIMIT $/;"	d
 general_intr_handler	kernel/interrupt.c	/^static void general_intr_handler(uint8_t vec_nr) {$/;"	f	file:
 general_tag	thread/thread.h	/^   struct list_elem general_tag;				    $/;"	m	struct:task_struct	typeref:struct:task_struct::list_elem
 get_a_page	kernel/memory.c	/^void* get_a_page(enum pool_flags pf, uint32_t vaddr) {$/;"	f
+get_child_dir_name	fs/fs.c	/^static int get_child_dir_name(uint32_t p_inode_nr, uint32_t c_inode_nr, char* path, void* io_buf) {$/;"	f	file:
 get_free_slot_in_global	fs/file.c	/^int32_t get_free_slot_in_global(void) {$/;"	f
 get_kernel_pages	kernel/memory.c	/^void* get_kernel_pages(uint32_t pg_cnt) {$/;"	f
+get_parent_dir_inode_nr	fs/fs.c	/^static uint32_t get_parent_dir_inode_nr(uint32_t child_inode_nr, void* io_buf) {$/;"	f	file:
 get_user_pages	kernel/memory.c	/^void* get_user_pages(uint32_t pg_cnt) {$/;"	f
 getpid	lib/user/syscall.c	/^uint32_t getpid() {$/;"	f
 global	kernel/kernel.S	/^global intr_entry_table$/;"	l
@@ -702,9 +705,11 @@ super_block	fs/super_block.h	/^struct super_block {$/;"	s
 swap_pairs_bytes	device/ide.c	/^static void swap_pairs_bytes(const char* dst, char* buf, uint32_t len) {$/;"	f	file:
 switch_to	thread/switch.S	/^switch_to:$/;"	l
 sync_dir_entry	fs/dir.c	/^bool sync_dir_entry(struct dir* parent_dir, struct dir_entry* p_de, void* io_buf) {$/;"	f
+sys_chdir	fs/fs.c	/^int32_t sys_chdir(const char* path) {$/;"	f
 sys_close	fs/fs.c	/^int32_t sys_close(int32_t fd) {$/;"	f
 sys_closedir	fs/fs.c	/^int32_t sys_closedir(struct dir* dir) {$/;"	f
 sys_free	kernel/memory.c	/^void sys_free(void* ptr) {$/;"	f
+sys_getcwd	fs/fs.c	/^char* sys_getcwd(char* buf, uint32_t size) {$/;"	f
 sys_getpid	userprog/syscall-init.c	/^uint32_t sys_getpid(void) {$/;"	f
 sys_lseek	fs/fs.c	/^int32_t sys_lseek(int32_t fd, int32_t offset, uint8_t whence) {$/;"	f
 sys_malloc	kernel/memory.c	/^void* sys_malloc(uint32_t size) {$/;"	f
