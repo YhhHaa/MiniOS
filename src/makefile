@@ -18,7 +18,8 @@ OBJS = $(BUILD_DIR)/main.o $(BUILD_DIR)/init.o $(BUILD_DIR)/interrupt.o \
 	   $(BUILD_DIR)/keyboard.o  $(BUILD_DIR)/ioqueue.o $(BUILD_DIR)/tss.o \
 	   $(BUILD_DIR)/process.o  $(BUILD_DIR)/syscall.o $(BUILD_DIR)/syscall-init.o \
 	   $(BUILD_DIR)/stdio.o $(BUILD_DIR)/stdio-kernel.o $(BUILD_DIR)/ide.o \
-	   $(BUILD_DIR)/fs.o $(BUILD_DIR)/inode.o $(BUILD_DIR)/file.o $(BUILD_DIR)/dir.o
+	   $(BUILD_DIR)/fs.o $(BUILD_DIR)/inode.o $(BUILD_DIR)/file.o $(BUILD_DIR)/dir.o \
+	   $(BUILD_DIR)/fork.o
 
 ##############     MBR代码编译     ############### 
 $(BUILD_DIR)/mbr.bin: boot/mbr.S 
@@ -105,7 +106,7 @@ $(BUILD_DIR)/process.o: userprog/process.c userprog/process.h thread/thread.h \
 	lib/string.h lib/stdint.h
 	$(CC) $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/syscall.o: lib/user/syscall.c lib/user/syscall.h lib/stdint.h
+$(BUILD_DIR)/syscall.o: lib/user/syscall.c lib/user/syscall.h lib/stdint.h thread/thread.h
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/syscall-init.o: userprog/syscall-init.c userprog/syscall-init.h \
@@ -149,6 +150,12 @@ $(BUILD_DIR)/dir.o: fs/dir.c fs/dir.h lib/stdint.h fs/inode.h lib/kernel/list.h 
 	kernel/global.h device/ide.h thread/sync.h thread/thread.h \
 	lib/kernel/bitmap.h kernel/memory.h fs/fs.h fs/file.h \
 	lib/kernel/stdio-kernel.h kernel/debug.h kernel/interrupt.h
+	$(CC) $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/fork.o: userprog/fork.c userprog/fork.h thread/thread.h lib/stdint.h \
+	lib/kernel/list.h kernel/global.h lib/kernel/bitmap.h kernel/memory.h \
+	userprog/process.h kernel/interrupt.h kernel/debug.h \
+	lib/kernel/stdio-kernel.h
 	$(CC) $(CFLAGS) $< -o $@
 
 ##############    汇编代码编译    ###############

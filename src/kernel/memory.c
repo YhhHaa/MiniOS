@@ -232,6 +232,20 @@ uint32_t addr_v2p(uint32_t vaddr) {
    return ((*pte & 0xfffff000) + (vaddr & 0x00000fff));
 }
 
+/* 安装1页大小的vaddr,专门针对fork时虚拟地址位图无须操作的情况 */
+void* get_a_page_without_opvaddrbitmap(enum pool_flags pf, uint32_t vaddr) {
+   struct pool* mem_pool = pf & PF_KERNEL ? &kernel_pool : &user_pool;
+   lock_acquire(&mem_pool->lock);
+   void* page_phyaddr = palloc(mem_pool); // 分配物理池
+   if (page_phyaddr == NULL) {
+      lock_release(&mem_pool->lock);
+      return NULL;
+   }
+   page_table_add((void*)vaddr, page_phyaddr);  // 映射虚拟地址到物理地址上
+   lock_release(&mem_pool->lock);
+   return (void*)vaddr;
+}
+
 /* 初始化内存池 */
 static void mem_pool_init(uint32_t all_mem) {
    put_str("   mem_pool_init start\n");
