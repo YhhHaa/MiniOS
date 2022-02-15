@@ -19,35 +19,75 @@ void u_prog_a(void);
 void u_prog_b(void);
 
 int main(void) {
-   put_str("I am kernel\n");
-   init_all();
-   intr_enable(); // 打开中断
- 
-	sys_mkdir("/dirl");
-	sys_mkdir("/dirl/subdirl");
-   struct dir* p_dir = sys_opendir("/dirl/subdirl"); 
-   if (p_dir) { 
-      printf("/dirl/subdirl open done!\ncontent:\n"); 
-      char* type = NULL; 
-      struct dir_entry* dir_e = NULL; 
-      while ((dir_e = sys_readdir(p_dir))) { 
-         if (dir_e->f_type == FT_REGULAR) {
-           type = "regular";
-         }else{
-            type = "directory";
-         }
-         printf(" %s %s\n",type,dir_e->filename);
-      }
-      if (sys_closedir (p_dir) == 0) {
-         printf("/dirl/subdirl close done!\n"); 
-      } else { 
-         printf("/dirl/subdirl close fail!\n"); 
-      }
-   }else{   
-      printf("/dirl/subdirl open fail!\n"); 
+	put_str("I am kernel\n");
+	init_all();
+	intr_enable(); // 打开中断
+
+   struct dir* p_dir = sys_opendir("/dir1/subdir1");
+   struct dir_entry* dir_e = NULL;
+   if(p_dir)
+   {
+       printf("/dir1/subdir1 open done!\ncontent:\n");
+       char* type = NULL;
+       while((dir_e = sys_readdir(p_dir)))
+       {
+           if(dir_e->f_type == FT_REGULAR)
+           {
+               type = "regular";
+           }
+           else	type = "directory";
+           printk("      %s   %s\n",type,dir_e->filename);
+       }
+       if(sys_closedir(p_dir) == 0)
+           printk("/dir1/subdir1 close done!\n");
+       else
+           printk("/dir1/subdir1 close fail!\n");
    }
-   while(1);
-   return 0;
+   else printf("/dir1/subdir1 open fail\n\n");
+   
+   printk("try to delete nonempty directory /dir1/subdir1\n");
+   if(sys_rmdir("/dir1/subdir1") == -1)
+   	printk("sys_rmdir: /dir/subdir1 delete fail\n");
+   
+   printk("try to delete directory /dir1/subdir1/file2\n");
+   if(sys_rmdir("/dir1/subdir1/file2") == -1)
+   	printk("sys_rmdir: /dir/subdir1/file2 delete fail\n");
+   	
+   if(sys_unlink("/dir1/subdir1/file2") == -1)
+   	printk("sys_unlink: /dir/subdir1/file2 delete fail\n");
+   else
+   	printk("sys_unlink: /dir/subdir1/file2 delete done\n");
+   	
+   printk("try to delete directory /dir1/subdir1 again\n");
+   if(sys_rmdir("/dir1/subdir1") == -1)
+   	printk("sys_rmdir: /dir/subdir1 delete fail\n");
+   else
+        printk("sys_rmdir:/dir1/subdir1 delete done!\n");
+        
+   p_dir = sys_opendir("/dir1");
+   dir_e = NULL;
+   if(p_dir)
+   {
+       printf("/dir1 open done!\ncontent:\n");
+       char* type = NULL;
+       while((dir_e = sys_readdir(p_dir)))
+       {
+           if(dir_e->f_type == FT_REGULAR)
+           {
+               type = "regular";
+           }
+           else	type = "directory";
+           printk("      %s   %s\n",type,dir_e->filename);
+       }
+       if(sys_closedir(p_dir) == 0)
+           printk("/dir1 close done!\n");
+       else
+           printk("/dir1 close fail!\n");
+   }
+   else printf("/dir1 open fail\n");
+
+	while(1);
+	return 0;
 }
 
 
