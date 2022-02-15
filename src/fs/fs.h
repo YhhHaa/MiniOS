@@ -39,6 +39,13 @@ struct path_search_record {
     enum file_types file_type; // 文件类型
 };
 
+/* 文件属性结构体 */
+struct stat {
+	uint32_t st_ino; // inode编号
+	uint32_t st_size; // 尺寸
+	enum file_types st_filetype; // 文件类型
+};
+
 extern struct partition* cur_part; // 默认情况下操作的是哪个分区
 int32_t path_depth_cnt(char* pathname);
 int32_t sys_open(const char* pathname, uint8_t flags);

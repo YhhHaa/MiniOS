@@ -682,6 +682,9 @@ ss	userprog/tss.c	/^    uint32_t ss;$/;"	m	struct:tss	file:
 ss0	userprog/tss.c	/^    uint32_t ss0;$/;"	m	struct:tss	file:
 ss1	userprog/tss.c	/^    uint32_t ss1;$/;"	m	struct:tss	file:
 ss2	userprog/tss.c	/^    uint32_t ss2;$/;"	m	struct:tss	file:
+st_filetype	fs/fs.h	/^	enum file_types st_filetype; \/\/ 文件类型$/;"	m	struct:stat	typeref:enum:stat::file_types
+st_ino	fs/fs.h	/^	uint32_t st_ino; \/\/ inode编号$/;"	m	struct:stat
+st_size	fs/fs.h	/^	uint32_t st_size; \/\/ 尺寸$/;"	m	struct:stat
 stack_magic	thread/thread.h	/^   uint32_t stack_magic;	 \/\/ 用这串数字做栈的边界标记,用于检测栈的溢出$/;"	m	struct:task_struct
 start_chs	device/ide.c	/^	uint8_t start_chs; \/\/ 起始柱面号$/;"	m	struct:partition_table_entry	file:
 start_head	device/ide.c	/^	uint8_t start_head; \/\/ 起始磁头号$/;"	m	struct:partition_table_entry	file:
@@ -689,6 +692,7 @@ start_lba	device/ide.c	/^	uint32_t start_lba; \/\/ 本分区起始扇区的lba�
 start_lba	device/ide.h	/^	uint32_t start_lba; \/\/ 起始扇区$/;"	m	struct:partition
 start_process	userprog/process.c	/^void start_process(void* filename_) {$/;"	f
 start_sec	device/ide.c	/^	uint8_t start_sec; \/\/ 起始扇区号$/;"	m	struct:partition_table_entry	file:
+stat	fs/fs.h	/^struct stat {$/;"	s
 status	thread/thread.h	/^   enum task_status status;$/;"	m	struct:task_struct	typeref:enum:task_struct::task_status
 std_fd	fs/file.h	/^enum std_fd {$/;"	g
 stderr_no	fs/file.h	/^   stderr_no   \/\/ 2 标准错误$/;"	e	enum:std_fd
@@ -720,6 +724,7 @@ sys_read	fs/fs.c	/^int32_t sys_read(int32_t fd, void* buf, uint32_t count) {$/;"
 sys_readdir	fs/fs.c	/^struct dir_entry* sys_readdir(struct dir* dir) {$/;"	f
 sys_rewinddir	fs/fs.c	/^void sys_rewinddir(struct dir* dir) {$/;"	f
 sys_rmdir	fs/fs.c	/^int32_t sys_rmdir(const char* pathname) {$/;"	f
+sys_stat	fs/fs.c	/^int32_t sys_stat(const char* path, struct stat* buf) {$/;"	f
 sys_unlink	fs/fs.c	/^int32_t sys_unlink(const char* pathname) {$/;"	f
 sys_write	fs/fs.c	/^int32_t sys_write(int32_t fd, const void* buf, uint32_t count) {$/;"	f
 syscall	userprog/syscall-init.c	/^typedef void* syscall;$/;"	t	file:
