@@ -325,6 +325,7 @@ dir_entry	fs/dir.h	/^struct dir_entry {$/;"	s
 dir_entry_size	fs/super_block.h	/^	uint32_t dir_entry_size; \/\/ 目录项大小$/;"	m	struct:super_block
 dir_open	fs/dir.c	/^struct dir* dir_open(struct partition* part, uint32_t inode_no) {$/;"	f
 dir_pos	fs/dir.h	/^	uint32_t dir_pos; \/\/ 记录在目录内的偏移$/;"	m	struct:dir
+dir_read	fs/dir.c	/^struct dir_entry* dir_read(struct dir* dir) {$/;"	f
 disk	device/ide.h	/^struct disk {$/;"	s
 disk_done	device/ide.h	/^	struct semaphore disk_done; \/\/ 发送完中断, 用于阻塞, 唤醒自身, 防止浪费CPU$/;"	m	struct:ide_channel	typeref:struct:ide_channel::semaphore
 ds	thread/thread.h	/^    uint32_t ds;$/;"	m	struct:intr_stack
@@ -709,6 +710,8 @@ sys_mkdir	fs/fs.c	/^int32_t sys_mkdir(const char* pathname) {$/;"	f
 sys_open	fs/fs.c	/^int32_t sys_open(const char* pathname, uint8_t flags) {$/;"	f
 sys_opendir	fs/fs.c	/^struct dir* sys_opendir(const char* name) {$/;"	f
 sys_read	fs/fs.c	/^int32_t sys_read(int32_t fd, void* buf, uint32_t count) {$/;"	f
+sys_readdir	fs/fs.c	/^struct dir_entry* sys_readdir(struct dir* dir) {$/;"	f
+sys_rewinddir	fs/fs.c	/^void sys_rewinddir(struct dir* dir) {$/;"	f
 sys_unlink	fs/fs.c	/^int32_t sys_unlink(const char* pathname) {$/;"	f
 sys_write	fs/fs.c	/^int32_t sys_write(int32_t fd, const void* buf, uint32_t count) {$/;"	f
 syscall	userprog/syscall-init.c	/^typedef void* syscall;$/;"	t	file:
