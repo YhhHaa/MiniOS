@@ -121,52 +121,67 @@ char* argv[MAX_ARG_NR] = {NULL};
 char final_path[MAX_PATH_LEN];
 int32_t argc = -1;
 
-void my_shell(void)
-{
-    cwd_cache[0] = '/';
-    cwd_cache[1] = 0;
-    int argc = -1;
-    while(1)
-    {
-        print_prompt();
-        memset(cmd_line,0,cmd_len);
-        memset(final_path,0,MAX_PATH_LEN);
-        memset(argv,0,sizeof(char*) * MAX_ARG_NR);
-        readline(cmd_line,cmd_len);
-        if(cmd_line[0] == 0)
-            continue;
-            
-        argc = -1;  
-        argc = cmd_parse(cmd_line,argv,' ');
-        if(argc == -1)
-        {
-            printf("num of arguments exceed %d\n",MAX_ARG_NR);
-            continue;
-        }
-        if(!strcmp("ls",argv[0]))
-            buildin_ls(argc,argv);
-        else if(!strcmp("pwd",argv[0]))
-            buildin_pwd(argc,argv);
-        else if(!strcmp("ps",argv[0]))
-            buildin_ps(argc,argv);
-        else if(!strcmp("cd",argv[0]))
-        {
-            if(buildin_cd(argc,argv) != NULL)
-            {
-                memset(cwd_cache,0,MAX_PATH_LEN);
-                strcpy(cwd_cache,final_path);
-            }
-        }
-        else if(!strcmp("clear",argv[0]))
-            buildin_clear(argc,argv);
-        else if(!strcmp("mkdir",argv[0]))
-            buildin_mkdir(argc,argv);
-        else if(!strcmp("rmdir",argv[0]))
-            buildin_rmdir(argc,argv);   
-        else if(!strcmp("rm",argv[0]))
-            buildin_rm(argc,argv); 
-        else
-            printf("external command\n");
-    }
-    PANIC("my_shell: should not be here");
+void my_shell(void) {
+	cwd_cache[0] = '/';
+	while (1) {
+		print_prompt(); 
+		memset(final_path, 0, MAX_PATH_LEN);
+		memset(cmd_line, 0, MAX_PATH_LEN);
+		readline(cmd_line, MAX_PATH_LEN);
+		if (cmd_line[0] == 0) {	 // 若只键入了一个回车
+			continue;
+		}
+
+		argc = -1;
+		argc = cmd_parse(cmd_line, argv, ' ');
+		if (argc == -1) {
+			printf("num of arguments exceed %d\n", MAX_ARG_NR);
+			continue;
+		}
+		if (!strcmp("ls", argv[0])) {
+			buildin_ls(argc, argv);
+		} else if (!strcmp("cd", argv[0])) {
+			if (buildin_cd(argc, argv) != NULL) {
+				memset(cwd_cache, 0, MAX_PATH_LEN);
+				strcpy(cwd_cache, final_path);
+			}
+		} else if (!strcmp("pwd", argv[0])) {
+			buildin_pwd(argc, argv);
+		} else if (!strcmp("ps", argv[0])) {
+			buildin_ps(argc, argv);
+		} else if (!strcmp("clear", argv[0])) {
+			buildin_clear(argc, argv);
+		} else if (!strcmp("mkdir", argv[0])){
+			buildin_mkdir(argc, argv);
+		} else if (!strcmp("rmdir", argv[0])){
+			buildin_rmdir(argc, argv);
+		} else if (!strcmp("rm", argv[0])) {
+			buildin_rm(argc, argv);
+		} else {      // 如果是外部命令,需要从磁盘上加载
+			int32_t pid = fork(); // 先fork一个新的进程
+			if (pid) {	   // 父进程
+				/* 下面这个while必须要加上,否则父进程一般情况下会比子进程先执行,
+				因此会进行下一轮循环将findl_path清空,这样子进程将无法从final_path中获得参数*/
+				while(1);
+			} else {	   // 子进程
+				make_clear_abs_path(argv[0], final_path); // 获取绝对路径到final_path中
+				argv[0] = final_path;
+				/* 先判断下文件是否存在 */
+				struct stat file_stat;
+				memset(&file_stat, 0, sizeof(struct stat));
+				if (stat(argv[0], &file_stat) == -1) {
+					printf("my_shell: cannot access %s: No such file or directory\n", argv[0]);
+				} else {
+					execv(argv[0], argv); // 加载该文件执行
+				}
+				while(1);
+			}
+		}
+		int32_t arg_idx = 0;
+		while(arg_idx < MAX_ARG_NR) {
+			argv[arg_idx] = NULL;
+			arg_idx++;
+		}
+	}
+	PANIC("my_shell: should not be here");
 }

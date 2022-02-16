@@ -158,3 +158,8 @@ int32_t chdir(const char* path) {
 void ps(void) {
    _syscall0(SYS_PS);
 }
+
+/* exec载入文件中的进程 */
+int32_t execv(const char* path, const char* argv[]) {
+	_syscall2(SYS_EXECV, path, argv);
+}
