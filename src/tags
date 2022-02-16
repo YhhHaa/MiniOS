@@ -305,6 +305,14 @@ btmp_bytes_len	lib/kernel/bitmap.h	/^   uint32_t btmp_bytes_len;$/;"	m	struct:bi
 buf	device/ioqueue.h	/^    char buf[bufsize];			    \/\/ 缓冲区大小$/;"	m	struct:ioqueue
 bufsize	device/ioqueue.h	7;"	d
 build_child_stack	userprog/fork.c	/^static int32_t build_child_stack(struct task_struct* child_thread) {$/;"	f	file:
+buildin_cd	shell/buildin_cmd.c	/^char* buildin_cd(uint32_t argc,char** argv)$/;"	f
+buildin_clear	shell/buildin_cmd.c	/^void buildin_clear(uint32_t argc,char** argv)$/;"	f
+buildin_ls	shell/buildin_cmd.c	/^void buildin_ls(uint32_t argc,char** argv)$/;"	f
+buildin_mkdir	shell/buildin_cmd.c	/^int32_t buildin_mkdir(uint32_t argc,char** argv)$/;"	f
+buildin_ps	shell/buildin_cmd.c	/^void buildin_ps(uint32_t argc,char** argv)$/;"	f
+buildin_pwd	shell/buildin_cmd.c	/^void buildin_pwd(uint32_t argc,char** argv)$/;"	f
+buildin_rm	shell/buildin_cmd.c	/^int32_t buildin_rm(uint32_t argc,char** argv)$/;"	f
+buildin_rmdir	shell/buildin_cmd.c	/^int32_t buildin_rmdir(uint32_t argc,char** argv)$/;"	f
 busy_wait	device/ide.c	/^static bool busy_wait(struct disk* hd) {$/;"	f	file:
 caps_lock_char	device/keyboard.c	25;"	d	file:
 caps_lock_make	device/keyboard.c	36;"	d	file:
@@ -438,7 +446,7 @@ file_types	fs/fs.h	/^enum file_types {$/;"	g
 file_write	fs/file.c	/^int32_t file_write(struct file* file, const void* buf, uint32_t count) {$/;"	f
 filename	fs/dir.h	/^	char filename[MAX_FILE_NAME_LEN]; \/\/ 普通文件或目录文件名称$/;"	m	struct:dir_entry
 filesys_init	fs/fs.c	/^void filesys_init() {$/;"	f
-final_path	shell/shell.c	/^char final_path[MAX_PATH_LEN] = {0};$/;"	v
+final_path	shell/shell.c	/^char final_path[MAX_PATH_LEN];$/;"	v
 fork	lib/user/syscall.c	/^pid_t fork(void) {$/;"	f
 fork_pid	thread/thread.c	/^pid_t fork_pid(void) {$/;"	f
 free	lib/user/syscall.c	/^void free(void* ptr) {$/;"	f
@@ -609,7 +617,7 @@ mul	boot/loader.S	/^      mul dx$/;"	d
 mul	boot/mbr.S	/^      mul dx$/;"	d
 my_channel	device/ide.h	/^	struct ide_channel* my_channel; \/\/ 此块硬盘归属于哪个ide通道$/;"	m	struct:disk	typeref:struct:disk::ide_channel
 my_disk	device/ide.h	/^	struct disk* my_disk; \/\/ 分区所属的硬盘$/;"	m	struct:partition	typeref:struct:partition::disk
-my_shell	shell/shell.c	/^void my_shell(void) {$/;"	f
+my_shell	shell/shell.c	/^void my_shell(void)$/;"	f
 name	device/ide.h	/^	char name[8]; \/\/ 分区名称, 如sd1, sda2$/;"	m	struct:partition
 name	device/ide.h	/^	char name[8]; \/\/ 本ata通道名称, 如ata0, ide0$/;"	m	struct:ide_channel
 name	device/ide.h	/^	char name[8]; \/\/ 本硬盘的名称, 如sda, sdb$/;"	m	struct:disk
