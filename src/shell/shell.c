@@ -42,7 +42,27 @@ static void readline(char* buf, int32_t count) {
 				putchar('\b');
 			}
 			break;
-	
+		
+		/* ctrl + l 清屏 */
+		case 'l' - 'a':
+			/* 1. 先将当前字符的'1'-'a'置0 */
+			*pos = 0;
+			/* 2. 再将屏幕清空 */
+			clear();
+			/* 3. 打印提示符 */
+			print_prompt();
+			/* 4. 恢复之前的命令 */
+			printf("%s", buf);
+			break;
+
+		/* ctrl + u 清掉输入 */
+		case 'u' - 'a':
+			while (buf != pos) {
+				putchar('\b');
+				*(pos--) = 0;
+			}
+			break;
+			
 		/* 非控制键则输出字符 */
 		default:
 			putchar(*pos);
