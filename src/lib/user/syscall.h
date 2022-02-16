@@ -2,7 +2,8 @@
 #define __LIB_USER_SYSCALL_H
 #include "stdint.h"
 #include "fs.h"
-enum SYSCALL_NR {
+#include "thread.h"
+enum SYSCALL_NR {   // 用来存放子功能号
    SYS_GETPID,
    SYS_WRITE,
    SYS_MALLOC,
@@ -26,13 +27,16 @@ enum SYSCALL_NR {
    SYS_STAT,
    SYS_PS,
    SYS_EXECV,
+   SYS_EXIT,
+   SYS_WAIT,
+   SYS_PIPE,
+   SYS_FD_REDIRECT,
+   SYS_HELP
 };
-
 uint32_t getpid(void);
 uint32_t write(int32_t fd, const void* buf, uint32_t count);
 void* malloc(uint32_t size);
 void free(void* ptr);
-int16_t fork(void);
 int32_t read(int32_t fd, void* buf, uint32_t count);
 void putchar(char char_asci);
 void clear(void);
@@ -51,5 +55,9 @@ int32_t stat(const char* path, struct stat* buf);
 int32_t chdir(const char* path);
 void ps(void);
 int32_t execv(const char* pathname, char** argv);
+void exit(int32_t status);
+pid_t wait(int32_t* status);
+int32_t pipe(int32_t pipefd[2]);
+void fd_redirect(uint32_t old_local_fd, uint32_t new_local_fd);
+void help(void);
 #endif
-

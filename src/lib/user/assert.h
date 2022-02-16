@@ -17,3 +17,4 @@ void user_spin(char* filename, int line, const char* func, const char* condition
 #endif/*NDEBUG*/
 
 #endif/*__LIB_USER_ASSERT_H*/
+

@@ -1,16 +1,15 @@
 #include "syscall.h"
-#include "thread.h"
 
 /* 无参数的系统调用 */
-#define _syscall0(NUMBER) ({				       \
-   int retval;					               \
+#define _syscall0(NUMBER) ({	           \
+   int retval;					           \
    asm volatile (					       \
    "int $0x80"						       \
    : "=a" (retval)					       \
    : "a" (NUMBER)					       \
    : "memory"						       \
-   );							       \
-   retval;						       \
+   );							           \
+   retval;						           \
 })
 
 /* 一个参数的系统调用 */
@@ -49,41 +48,42 @@
    retval;						       \
 })
 
-/* 返回当前任务pid */
+
+// 返回当前任务pid 
 uint32_t getpid() {
    return _syscall0(SYS_GETPID);
 }
 
-/* 将buf中count个字符写入文件描述符fd */
+/* 打印字符串str */
 uint32_t write(int32_t fd, const void* buf, uint32_t count) {
    return _syscall3(SYS_WRITE, fd, buf, count);
 }
 
+// 申请 size 字节大小的内存, 并返回结果
+void* malloc(uint32_t size) {
+   return (void*)_syscall1(SYS_MALLOC, size);
+}
+
+// 释放 ptr 指向的内存
+void free(void* ptr) {
+   _syscall1(SYS_FREE, ptr);
+}
+
+/* 派生子进程,返回子进程pid */
+pid_t fork(void){
+   return _syscall0(SYS_FORK);
+}
+
 /* 从文件描述符fd中读取count个字节到buf */
 int32_t read(int32_t fd, void* buf, uint32_t count) {
-	return _syscall3(SYS_READ, fd, buf, count);
-}
-
-/* 申请size字节大小的内存, 并返回结果 */
-void* malloc(uint32_t size) {
-	return (void*)_syscall1(SYS_MALLOC, size);
-}
-
-/* 释放ptr指向的内存 */
-void free(void* ptr) {
-	_syscall1(SYS_FREE, ptr);
-}
-
-/* fork复制一个子进程 */
-pid_t fork(void) {
-	return _syscall0(SYS_FORK);
+   return _syscall3(SYS_READ, fd, buf, count);
 }
 
 /* 输出一个字符 */
 void putchar(char char_asci) {
    _syscall1(SYS_PUTCHAR, char_asci);
 }
- 
+
 /* 清空屏幕 */
 void clear(void) {
    _syscall0(SYS_CLEAR);
@@ -159,7 +159,32 @@ void ps(void) {
    _syscall0(SYS_PS);
 }
 
-/* exec载入文件中的进程 */
+/* 执行pathname */
 int32_t execv(const char* pathname, char** argv) {
    return _syscall2(SYS_EXECV, pathname, argv);
+}
+
+// 以状态 status 退出
+void exit(int32_t status) {
+    _syscall1(SYS_EXIT, status);
+}
+
+// 等待子进程, 子进程状态存储到 status
+pid_t wait(int32_t* status) {
+    return _syscall1(SYS_WAIT, status);
+}
+
+/* 生成管道,pipefd[0]负责读入管道,pipefd[1]负责写入管道 */
+int32_t pipe(int32_t pipefd[2]) {
+   return _syscall1(SYS_PIPE, pipefd);
+}
+
+/* 将文件描述符old_local_fd重定向到new_local_fd */
+void fd_redirect(uint32_t old_local_fd, uint32_t new_local_fd) {
+   _syscall2(SYS_FD_REDIRECT, old_local_fd, new_local_fd);
+}
+
+/* 显示系统支持的命令 */
+void help(void) {
+   _syscall0(SYS_HELP);
 }
