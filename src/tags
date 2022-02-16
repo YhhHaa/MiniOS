@@ -258,6 +258,8 @@ alt_status	device/keyboard.c	/^static bool ctrl_status, shift_status, alt_status
 ards_nr	boot/loader.S	/^   ards_nr dw 0		      ;用于记录ards结构体数量$/;"	d
 arena	kernel/memory.c	/^struct arena {$/;"	s	file:
 arena2block	kernel/memory.c	/^static struct mem_block* arena2block(struct arena* a, uint32_t idx) {$/;"	f	file:
+argc	shell/shell.c	/^int32_t argc = -1;$/;"	v
+argv	shell/shell.c	/^char* argv[MAX_ARG_NR] = {NULL};$/;"	v
 attr_low_byte	kernel/global.h	/^   uint8_t  attr_low_byte;$/;"	m	struct:gdt_desc
 attribute	kernel/interrupt.c	/^   uint8_t     attribute;$/;"	m	struct:gate_desc	file:
 backlink	userprog/tss.c	/^    uint32_t backlink;$/;"	m	struct:tss	file:
@@ -300,6 +302,7 @@ cls_screen	lib/kernel/print.S	/^cls_screen:$/;"	l
 cmd_len	shell/shell.c	11;"	d	file:
 cmd_line	shell/shell.c	/^static char cmd_line[cmd_len] = {0};$/;"	v	file:
 cmd_out	device/ide.c	/^static void cmd_out(struct ide_channel* channel, uint8_t cmd) {$/;"	f	file:
+cmd_parse	shell/shell.c	/^static int32_t cmd_parse(char* cmd_str, char** argv, char token) {$/;"	f	file:
 cnt	kernel/memory.c	/^	uint32_t cnt;$/;"	m	struct:arena	file:
 console_acquire	device/console.c	/^void console_acquire() {$/;"	f
 console_init	device/console.c	/^void console_init() {$/;"	f
@@ -416,6 +419,7 @@ file_types	fs/fs.h	/^enum file_types {$/;"	g
 file_write	fs/file.c	/^int32_t file_write(struct file* file, const void* buf, uint32_t count) {$/;"	f
 filename	fs/dir.h	/^	char filename[MAX_FILE_NAME_LEN]; \/\/ 普通文件或目录文件名称$/;"	m	struct:dir_entry
 filesys_init	fs/fs.c	/^void filesys_init() {$/;"	f
+final_path	shell/shell.c	/^char final_path[MAX_PATH_LEN] = {0};$/;"	v
 fork	lib/user/syscall.c	/^pid_t fork(void) {$/;"	f
 fork_pid	thread/thread.c	/^pid_t fork_pid(void) {$/;"	f
 free	lib/user/syscall.c	/^void free(void* ptr) {$/;"	f
