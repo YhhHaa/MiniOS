@@ -5,7 +5,7 @@
 #include "syscall.h"
 #include "stdio.h"
 #include "global.h"
-#include "debug.h"
+#include "assert.h"
 #include "string.h"
 #include "buildin_cmd.h"
 
@@ -25,7 +25,7 @@ void print_prompt(void) {
  
 /* 从键盘缓冲区中最多读入count个字节到buf。*/
 static void readline(char* buf, int32_t count) {
-	ASSERT(buf != NULL && count > 0);
+	assert(buf != NULL && count > 0);
 	char* pos = buf;
 	
 	while (read(stdin_no, pos, 1) != -1 && (pos - buf) < count) { // 在不出错情况下,直到找到回车符才返回
@@ -75,7 +75,7 @@ static void readline(char* buf, int32_t count) {
 
 /* 分析字符串cmd_str中以token为分隔符的单词,将各单词的指针存入argv数组 */
 static int32_t cmd_parse(char* cmd_str, char** argv, char token) {
-	ASSERT(cmd_str != NULL);
+	assert(cmd_str != NULL);
 	/* 1. 清空数组argv */
 	int32_t arg_idx = 0;
 	while(arg_idx < MAX_ARG_NR) {
@@ -183,5 +183,5 @@ void my_shell(void) {
 			arg_idx++;
 		}
 	}
-	PANIC("my_shell: should not be here");
+	panic("my_shell: should not be here");
 }

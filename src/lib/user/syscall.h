@@ -50,6 +50,6 @@ void rewinddir(struct dir* dir);
 int32_t stat(const char* path, struct stat* buf);
 int32_t chdir(const char* path);
 void ps(void);
-int32_t execv(const char* path, const char* argv[]);
+int32_t execv(const char* pathname, char** argv);
 #endif
 

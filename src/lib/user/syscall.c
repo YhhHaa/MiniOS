@@ -160,6 +160,6 @@ void ps(void) {
 }
 
 /* exec载入文件中的进程 */
-int32_t execv(const char* path, const char* argv[]) {
-	_syscall2(SYS_EXECV, path, argv);
+int32_t execv(const char* pathname, char** argv) {
+   return _syscall2(SYS_EXECV, pathname, argv);
 }
