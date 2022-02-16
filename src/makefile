@@ -131,7 +131,7 @@ $(BUILD_DIR)/ide.o: device/ide.c device/ide.h lib/kernel/stdio-kernel.h \
 $(BUILD_DIR)/fs.o: fs/fs.c fs/fs.h lib/stdint.h device/ide.h thread/sync.h lib/kernel/list.h \
 	kernel/global.h thread/thread.h lib/kernel/bitmap.h kernel/memory.h fs/super_block.h \
 	fs/inode.h fs/dir.h lib/kernel/stdio-kernel.h lib/string.h lib/stdint.h kernel/debug.h \
-	kernel/interrupt.h lib/kernel/print.h device/console.h
+	kernel/interrupt.h lib/kernel/print.h
 	$(CC) $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/inode.o: fs/inode.c fs/inode.h lib/stdint.h lib/kernel/list.h \

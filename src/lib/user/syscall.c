@@ -59,6 +59,11 @@ uint32_t write(int32_t fd, const void* buf, uint32_t count) {
    return _syscall3(SYS_WRITE, fd, buf, count);
 }
 
+/* 从文件描述符fd中读取count个字节到buf */
+int32_t read(int32_t fd, void* buf, uint32_t count) {
+	return _syscall3(SYS_READ, fd, buf, count);
+}
+
 /* 申请size字节大小的内存, 并返回结果 */
 void* malloc(uint32_t size) {
 	return (void*)_syscall1(SYS_MALLOC, size);
