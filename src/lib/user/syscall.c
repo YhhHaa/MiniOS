@@ -78,3 +78,13 @@ void free(void* ptr) {
 pid_t fork(void) {
 	_syscall0(SYS_FORK);
 }
+
+/* 输出一个字符 */
+void putchar(char char_asci) {
+   _syscall1(SYS_PUTCHAR, char_asci);
+}
+ 
+/* 清空屏幕 */
+void clear(void) {
+   _syscall0(SYS_CLEAR);
+}

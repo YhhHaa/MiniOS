@@ -16,3 +16,7 @@ void printk(const char* format, ...) {
    va_end(args);
    console_put_str(buf);
 }
+
+void sys_putchar(const char chr) {
+    console_put_char(chr);
+}

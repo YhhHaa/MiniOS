@@ -138,10 +138,13 @@ SELECTOR_U_STACK	kernel/global.h	44;"	d
 SELECTOR_VIDEO	boot/loader.S	/^   SELECTOR_VIDEO equ (0x0003<<3) + TI_GDT + RPL0	 ; 同上 $/;"	d
 SELECTOR_VIDEO	lib/kernel/print.S	/^SELECTOR_VIDEO equ (0x0003<<3) + TI_GDT + RPL0$/;"	d
 SYSCALL_NR	lib/user/syscall.h	/^enum SYSCALL_NR {$/;"	g
+SYS_CLEAR	lib/user/syscall.h	/^   SYS_CLEAR,$/;"	e	enum:SYSCALL_NR
 SYS_FORK	lib/user/syscall.h	/^   SYS_FORK,$/;"	e	enum:SYSCALL_NR
 SYS_FREE	lib/user/syscall.h	/^   SYS_FREE,$/;"	e	enum:SYSCALL_NR
 SYS_GETPID	lib/user/syscall.h	/^   SYS_GETPID,$/;"	e	enum:SYSCALL_NR
 SYS_MALLOC	lib/user/syscall.h	/^   SYS_MALLOC,$/;"	e	enum:SYSCALL_NR
+SYS_PUTCHAR	lib/user/syscall.h	/^   SYS_PUTCHAR,$/;"	e	enum:SYSCALL_NR
+SYS_READ	lib/user/syscall.h	/^   SYS_READ,$/;"	e	enum:SYSCALL_NR
 SYS_WRITE	lib/user/syscall.h	/^   SYS_WRITE,$/;"	e	enum:SYSCALL_NR
 TASK_BLOCKED	thread/thread.h	/^   TASK_BLOCKED,$/;"	e	enum:task_status
 TASK_DIED	thread/thread.h	/^   TASK_DIED$/;"	e	enum:task_status
@@ -290,6 +293,8 @@ caps_lock_status	device/keyboard.c	/^static bool ctrl_status, shift_status, alt_
 channel_cnt	device/ide.c	/^uint8_t channel_cnt; \/\/ 按硬盘数计算的通道数$/;"	v
 channels	device/ide.c	/^struct ide_channel channels[2]; \/\/ 有两个ide通道$/;"	v	typeref:struct:ide_channel
 char_invisible	device/keyboard.c	18;"	d	file:
+clear	lib/user/syscall.c	/^void clear(void) {$/;"	f
+cls_screen	lib/kernel/print.S	/^cls_screen:$/;"	l
 cmd_out	device/ide.c	/^static void cmd_out(struct ide_channel* channel, uint8_t cmd) {$/;"	f	file:
 cnt	kernel/memory.c	/^	uint32_t cnt;$/;"	m	struct:arena	file:
 console_acquire	device/console.c	/^void console_acquire() {$/;"	f
@@ -436,6 +441,7 @@ getpid	lib/user/syscall.c	/^uint32_t getpid() {$/;"	f
 global	kernel/kernel.S	/^global intr_entry_table$/;"	l
 global	kernel/kernel.S	/^global intr_exit$/;"	l
 global	kernel/kernel.S	/^global syscall_handler$/;"	l
+global	lib/kernel/print.S	/^global cls_screen$/;"	l
 global	lib/kernel/print.S	/^global put_char$/;"	l
 global	lib/kernel/print.S	/^global put_int$/;"	l
 global	lib/kernel/print.S	/^global put_str$/;"	l
@@ -636,8 +642,10 @@ put_char	lib/kernel/print.S	/^put_char:$/;"	l
 put_int	lib/kernel/print.S	/^put_int:$/;"	l
 put_int_buffer	lib/kernel/print.S	/^put_int_buffer    dq    0     ; 定义8字节缓冲区用于数字到字符的转换$/;"	d
 put_str	lib/kernel/print.S	/^put_str:$/;"	l
+putchar	lib/user/syscall.c	/^void putchar(char char_asci) {$/;"	f
 rd_disk_m_16	boot/mbr.S	/^rd_disk_m_16:	   $/;"	l
 rd_disk_m_32	boot/loader.S	/^rd_disk_m_32:	   $/;"	l
+read	lib/user/syscall.c	/^int32_t read(int32_t fd, void* buf, uint32_t count) {$/;"	f
 read_from_sector	device/ide.c	/^static void read_from_sector(struct disk* hd, void* buf, uint8_t sec_cnt) {$/;"	f	file:
 reg_alt_status	device/ide.c	23;"	d	file:
 reg_cmd	device/ide.c	22;"	d	file:
@@ -730,6 +738,7 @@ sys_malloc	kernel/memory.c	/^void* sys_malloc(uint32_t size) {$/;"	f
 sys_mkdir	fs/fs.c	/^int32_t sys_mkdir(const char* pathname) {$/;"	f
 sys_open	fs/fs.c	/^int32_t sys_open(const char* pathname, uint8_t flags) {$/;"	f
 sys_opendir	fs/fs.c	/^struct dir* sys_opendir(const char* name) {$/;"	f
+sys_putchar	lib/kernel/stdio-kernel.c	/^void sys_putchar(const char chr) {$/;"	f
 sys_read	fs/fs.c	/^int32_t sys_read(int32_t fd, void* buf, uint32_t count) {$/;"	f
 sys_readdir	fs/fs.c	/^struct dir_entry* sys_readdir(struct dir* dir) {$/;"	f
 sys_rewinddir	fs/fs.c	/^void sys_rewinddir(struct dir* dir) {$/;"	f
@@ -740,7 +749,7 @@ sys_write	fs/fs.c	/^int32_t sys_write(int32_t fd, const void* buf, uint32_t coun
 syscall	userprog/syscall-init.c	/^typedef void* syscall;$/;"	t	file:
 syscall_handler	kernel/kernel.S	/^syscall_handler:$/;"	l
 syscall_init	userprog/syscall-init.c	/^void syscall_init(void) {$/;"	f
-syscall_nr	userprog/syscall-init.c	12;"	d	file:
+syscall_nr	userprog/syscall-init.c	13;"	d	file:
 syscall_table	userprog/syscall-init.c	/^syscall syscall_table[syscall_nr];$/;"	v
 tab	device/keyboard.c	13;"	d	file:
 tail	device/ioqueue.h	/^    int32_t tail;			    \/\/ 队尾,数据从队尾处读出$/;"	m	struct:ioqueue
