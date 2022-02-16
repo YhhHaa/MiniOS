@@ -84,7 +84,8 @@ KBD_BUF_PORT	device/keyboard.c	8;"	d	file:
 K_HEAP_START	kernel/memory.c	22;"	d	file:
 LD	makefile	/^LD = ld$/;"	m
 LDFLAGS	makefile	/^LDFLAGS = -melf_i386 -Ttext $(ENTRY_POINT) -e main -Map $(BUILD_DIR)\/kernel.map$/;"	m
-LIB	makefile	/^LIB = -I lib\/ -I lib\/kernel\/ -I lib\/user\/ -I kernel\/ -I device\/ -I thread\/  -I userprog\/ -I fs\/$/;"	m
+LIB	makefile	/^LIB = -I lib\/ -I lib\/kernel\/ -I lib\/user\/ -I kernel\/ -I device\/ -I thread\/  -I userprog\/ -I fs\/ -I shell$/;"	m
+MAX_ARG_NR	shell/shell.c	12;"	d	file:
 MAX_FILES_OPEN_PER_PROC	thread/thread.h	8;"	d
 MAX_FILES_PER_PART	fs/fs.h	6;"	d
 MAX_FILE_NAME_LEN	fs/dir.h	8;"	d
@@ -225,6 +226,7 @@ __KERNEL_GLOBAL_H	kernel/global.h	2;"	d
 __KERNEL_INIT_H	kernel/init.h	2;"	d
 __KERNEL_INTERRUPT_H	kernel/interrupt.h	2;"	d
 __KERNEL_MEMORY_H	kernel/memory.h	2;"	d
+__KERNEL_SHELL_H	shell/shell.h	2;"	d
 __LIB_IO_H	lib/kernel/io.h	12;"	d
 __LIB_KERNEL_BITMAP_H	lib/kernel/bitmap.h	2;"	d
 __LIB_KERNEL_LIST_H	lib/kernel/list.h	2;"	d
@@ -295,6 +297,8 @@ channels	device/ide.c	/^struct ide_channel channels[2]; \/\/ 有两个ide通道$
 char_invisible	device/keyboard.c	18;"	d	file:
 clear	lib/user/syscall.c	/^void clear(void) {$/;"	f
 cls_screen	lib/kernel/print.S	/^cls_screen:$/;"	l
+cmd_len	shell/shell.c	11;"	d	file:
+cmd_line	shell/shell.c	/^static char cmd_line[cmd_len] = {0};$/;"	v	file:
 cmd_out	device/ide.c	/^static void cmd_out(struct ide_channel* channel, uint8_t cmd) {$/;"	f	file:
 cnt	kernel/memory.c	/^	uint32_t cnt;$/;"	m	struct:arena	file:
 console_acquire	device/console.c	/^void console_acquire() {$/;"	f
@@ -321,6 +325,7 @@ ctrl_r_char	device/keyboard.c	20;"	d	file:
 ctrl_r_make	device/keyboard.c	34;"	d	file:
 ctrl_status	device/keyboard.c	/^static bool ctrl_status, shift_status, alt_status, caps_lock_status, ext_scancode;$/;"	v	file:
 cur_part	fs/fs.c	/^struct partition* cur_part; \/\/ 默认情况下操作的是哪个分区$/;"	v	typeref:struct:partition
+cwd_cache	shell/shell.c	/^char cwd_cache[64] = {0};$/;"	v
 cwd_inode_nr	thread/thread.h	/^   uint32_t cwd_inode_nr; \/\/ 进程所在的工作目录的inode编号$/;"	m	struct:task_struct
 data_start_lba	fs/super_block.h	/^	uint32_t data_start_lba; \/\/ 数据区开始的第一个扇区号$/;"	m	struct:super_block
 dcount	kernel/interrupt.c	/^   uint8_t     dcount;   \/\/此项为双字计数字段，是门描述符中的第4字节。此项固定值，不用考虑$/;"	m	struct:gate_desc	file:
@@ -577,6 +582,7 @@ mul	boot/loader.S	/^      mul dx$/;"	d
 mul	boot/mbr.S	/^      mul dx$/;"	d
 my_channel	device/ide.h	/^	struct ide_channel* my_channel; \/\/ 此块硬盘归属于哪个ide通道$/;"	m	struct:disk	typeref:struct:disk::ide_channel
 my_disk	device/ide.h	/^	struct disk* my_disk; \/\/ 分区所属的硬盘$/;"	m	struct:partition	typeref:struct:partition::disk
+my_shell	shell/shell.c	/^void my_shell(void) {$/;"	f
 name	device/ide.h	/^	char name[8]; \/\/ 分区名称, 如sd1, sda2$/;"	m	struct:partition
 name	device/ide.h	/^	char name[8]; \/\/ 本ata通道名称, 如ata0, ide0$/;"	m	struct:ide_channel
 name	device/ide.h	/^	char name[8]; \/\/ 本硬盘的名称, 如sda, sdb$/;"	m	struct:disk
@@ -630,6 +636,7 @@ pop	kernel/kernel.S	/^   pop ds$/;"	d
 port_base	device/ide.h	/^	uint16_t port_base; \/\/ 本通道的起始端口号,通道1和通道2端口号不同$/;"	m	struct:ide_channel
 prev	lib/kernel/list.h	/^   struct list_elem* prev; \/\/ 前躯结点$/;"	m	struct:list_elem	typeref:struct:list_elem::list_elem
 prim_parts	device/ide.h	/^	struct partition prim_parts[4]; \/\/ 主分区顶多是4个$/;"	m	struct:disk	typeref:struct:disk::partition
+print_prompt	shell/shell.c	/^void print_prompt(void) {$/;"	f
 printf	lib/stdio.c	/^uint32_t printf(const char* format, ...) {$/;"	f
 printk	lib/kernel/stdio-kernel.c	/^void printk(const char* format, ...) {$/;"	f
 priority	thread/thread.h	/^   uint8_t priority;$/;"	m	struct:task_struct
@@ -647,6 +654,7 @@ rd_disk_m_16	boot/mbr.S	/^rd_disk_m_16:	   $/;"	l
 rd_disk_m_32	boot/loader.S	/^rd_disk_m_32:	   $/;"	l
 read	lib/user/syscall.c	/^int32_t read(int32_t fd, void* buf, uint32_t count) {$/;"	f
 read_from_sector	device/ide.c	/^static void read_from_sector(struct disk* hd, void* buf, uint8_t sec_cnt) {$/;"	f	file:
+readline	shell/shell.c	/^static void readline(char* buf, int32_t count) {$/;"	f	file:
 reg_alt_status	device/ide.c	23;"	d	file:
 reg_cmd	device/ide.c	22;"	d	file:
 reg_ctl	device/ide.c	24;"	d	file:

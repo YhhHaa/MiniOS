@@ -12,17 +12,15 @@
 #include "string.h"
 #include "fs.h"
 #include "dir.h"
+#include "shell.h"
 
-void k_thread_a(void*);
-void k_thread_b(void*);
-void u_prog_a(void);
-void u_prog_b(void);
-extern void init(void);
-
+void init(void);
 
 int main(void) {
    put_str("I am kernel\n");
    init_all();
+   cls_screen();
+   console_put_str("[yhhhaa@localhost /]$ ");
    intr_enable(); // 打开中断
  
    while(1);
@@ -33,9 +31,9 @@ int main(void) {
 void init(void) {
 	uint32_t ret_pid = fork();
 	if (ret_pid) {
-		printf("i am father, my pid is %d, child pid is %d\n", getpid(), ret_pid);
+		while(1);
 	} else {
-		printf("i am child, my pid is %d, ret pid is %d\n", getpid(), ret_pid);
+		my_shell();
 	}
 	while(1);
 }
