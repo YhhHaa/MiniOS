@@ -76,7 +76,7 @@ void free(void* ptr) {
 
 /* fork复制一个子进程 */
 pid_t fork(void) {
-	_syscall0(SYS_FORK);
+	return _syscall0(SYS_FORK);
 }
 
 /* 输出一个字符 */

@@ -15,6 +15,7 @@
 #include "shell.h"
 
 void init(void);
+extern void cls_screen(void);
 
 int main(void) {
    put_str("I am kernel\n");
