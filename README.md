@@ -1,19 +1,10 @@
 # MiniOS操作系统小型实例
 
-## 0. 项目文件结构
+复现大象书<操作系统真相还原>的微型操作系统
+终于学完了774页, 不容易啊.
 
-## 1. 操作系统复现
-
-### 1. mbr.S主引导记录
-![](https://raw.githubusercontent.com/yetao0806/CloudImage/main/MNIOS20220119202518.png)
-### 2. loader.S加载器
-![](https://raw.githubusercontent.com/yetao0806/CloudImage/main/MNIOS20220119202633.png)
-### 3. 内核文件
-![](https://raw.githubusercontent.com/yetao0806/CloudImage/main/MNIOS20220119202706.png)
-#### 1. 内存管理
-初始化
-
-## 2. 遇到问题
+## 遇到问题
 ### 线程调度
-通过`ret`得到栈中的返回地址执行, 导致第一次执行的`unused_addr`占位符如果是线程只执行一条语句返回,
-则会出现`valid opcode exception`
+通过`ret`得到栈中的返回地址执行, 导致第一次执行的`unused_addr`占位符如果是线程只执行一条语句返回,则会出现`valid opcode 
+exception`
+解决了, 在第15章通过CRT运行库调用`exit`系统调用, 回收其进程资源, 同时等待父进程通过`wait`回收其资源, 如无父进程则交由`init`根进程回收其`PCB`以及`页目录表`
